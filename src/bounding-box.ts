@@ -69,4 +69,14 @@ export namespace BoundingBox {
       return acc;
     }, empty());
   }
+
+  export function round(bounds: BoundingBox, precision = 2): BoundingBox {
+    const multiplier = 10 ** precision;
+    return {
+      maxX: Math.ceil(bounds.maxX * multiplier) / multiplier,
+      maxY: Math.ceil(bounds.maxY * multiplier) / multiplier,
+      minX: Math.floor(bounds.minX * multiplier) / multiplier,
+      minY: Math.floor(bounds.minY * multiplier) / multiplier,
+    };
+  }
 }
