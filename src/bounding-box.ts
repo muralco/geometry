@@ -79,4 +79,14 @@ export namespace BoundingBox {
       minY: Math.floor(bounds.minY * multiplier) / multiplier,
     };
   }
+
+  /**
+   * Checks if a `parent` AABB fully contains (non-inclusive) a `point` Point
+   */
+  export function includesPoint(
+    { maxX, maxY, minX, minY }: BoundingBox,
+    { x, y }: Point,
+  ): boolean {
+    return maxX > x && maxY > y && minX < x && minY < y;
+  }
 }
