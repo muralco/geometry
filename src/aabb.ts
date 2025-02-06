@@ -16,6 +16,9 @@ export interface Aabb {
 }
 
 export namespace Aabb {
+  /**
+   * Returns an empty Aabb
+   */
   export function empty(): Aabb {
     return {
       maxX: -Infinity,
@@ -25,6 +28,9 @@ export namespace Aabb {
     };
   }
 
+  /**
+   * Returns an Aabb that contains all the given points
+   */
   export function fromPoints(points: Point[]): Aabb {
     return points.reduce((bounds, p) => {
       addPointInPlace(bounds, p);
@@ -32,10 +38,17 @@ export namespace Aabb {
     }, empty());
   }
 
+  /**
+   * Checks if the given Aabb is empty
+   */
   export function isEmpty({ maxX, maxY, minX, minY }: Aabb): boolean {
     return minX >= maxX || minY >= maxY;
   }
 
+  /**
+   * Creates an Aabb from a Rect
+   * Rect is a record with `left`, `top`, `width`, and `height` properties.
+   */
   export function fromRect({ height, left, top, width }: Rect): Aabb {
     return {
       maxX: left + width,
@@ -45,6 +58,9 @@ export namespace Aabb {
     };
   }
 
+  /**
+   * Converts provided Aabb to a Rect
+   */
   export function toRect({ maxX, maxY, minX, minY }: Aabb): Rect {
     return {
       height: maxY - minY,
@@ -54,15 +70,24 @@ export namespace Aabb {
     };
   }
 
-  export function addPoint(bounds: Aabb, { x, y }: Point): Aabb {
+  /**
+   * Adds a point to the aabb and returns a new one.
+   * Since this functions creates a new object, it's not recommended to use it in a loop.
+   * Use `addPointInPlace` instead in such cases.
+   */
+  export function addPoint(aabb: Aabb, { x, y }: Point): Aabb {
     return {
-      maxX: Math.max(bounds.maxX, x),
-      maxY: Math.max(bounds.maxY, y),
-      minX: Math.min(bounds.minX, x),
-      minY: Math.min(bounds.minY, y),
+      maxX: Math.max(aabb.maxX, x),
+      maxY: Math.max(aabb.maxY, y),
+      minX: Math.min(aabb.minX, x),
+      minY: Math.min(aabb.minY, y),
     };
   }
 
+  /**
+   * Adds a point to the aabb in place.
+   * This function mutates the provided object. Use it in a loop to avoid creating temporary objects.
+   */
   export function addPointInPlace(bounds: Aabb, { x, y }: Point): void {
     bounds.minX = Math.min(bounds.minX, x);
     bounds.minY = Math.min(bounds.minY, y);
@@ -70,8 +95,12 @@ export namespace Aabb {
     bounds.maxY = Math.max(bounds.maxY, y);
   }
 
-  export function union(...bounds: Aabb[]): Aabb {
-    return bounds.reduce((acc, { maxX, maxY, minX, minY }) => {
+  /**
+   * Returns the union of the provided bounds.
+   * The result contains every provided aabb.
+   */
+  export function union(...aabbs: Aabb[]): Aabb {
+    return aabbs.reduce((acc, { maxX, maxY, minX, minY }) => {
       acc.minX = Math.min(acc.minX, minX);
       acc.minY = Math.min(acc.minY, minY);
       acc.maxX = Math.max(acc.maxX, maxX);
@@ -83,19 +112,22 @@ export namespace Aabb {
   /**
    * Rounds the bounds to a given precision.
    * The result can't be smaller than the original, but it can be a bit bigger.
+   *
+   * The precision is the number of decimal places to round to.
+   * By default, it rounds to 2 decimal places.
    */
-  export function round(bounds: Aabb, precision = 2): Aabb {
+  export function round(aabb: Aabb, precision = 2): Aabb {
     const multiplier = 10 ** precision;
     return {
-      maxX: Math.ceil(bounds.maxX * multiplier) / multiplier,
-      maxY: Math.ceil(bounds.maxY * multiplier) / multiplier,
-      minX: Math.floor(bounds.minX * multiplier) / multiplier,
-      minY: Math.floor(bounds.minY * multiplier) / multiplier,
+      maxX: Math.ceil(aabb.maxX * multiplier) / multiplier,
+      maxY: Math.ceil(aabb.maxY * multiplier) / multiplier,
+      minX: Math.floor(aabb.minX * multiplier) / multiplier,
+      minY: Math.floor(aabb.minY * multiplier) / multiplier,
     };
   }
 
   /**
-   * Checks if a `parent` AABB fully contains (non-inclusive) a `point` Point
+   * Checks if a `parent` Aabb contains (non-inclusive) a point.
    */
   export function includesPoint(
     { maxX, maxY, minX, minY }: Aabb,
@@ -105,7 +137,7 @@ export namespace Aabb {
   }
 
   /**
-   * Checks if a `parent` AABB fully contains a `child` AABB
+   * Checks if a `parent` Aabb fully contains a `child` Aabb.
    */
   export function includes(parent: Aabb, child: Aabb): boolean {
     return (
@@ -116,6 +148,10 @@ export namespace Aabb {
     );
   }
 
+  /**
+   * Expands the bounds by the given amount (adds padding).
+   * The amount can be negative.
+   */
   export function expand(
     { maxX, maxY, minX, minY }: Aabb,
     amount: number,
