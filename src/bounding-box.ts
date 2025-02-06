@@ -22,6 +22,13 @@ export namespace BoundingBox {
     };
   }
 
+  export function fromPoints(points: Point[]): BoundingBox {
+    return points.reduce((bounds, p) => {
+      addPointInPlace(bounds, p);
+      return bounds;
+    }, empty());
+  }
+
   export function isEmpty({ maxX, maxY, minX, minY }: BoundingBox): boolean {
     return minX >= maxX || minY >= maxY;
   }
