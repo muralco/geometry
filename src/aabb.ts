@@ -5,15 +5,18 @@ import { Rect } from '@muralco/types';
 // TODO: Move 'Point' to this package from '@muralco/api/widgets'
 type Point = { x: number; y: number };
 
-export interface BoundingBox {
+/**
+ * Axis-aligned bounding box
+ */
+export interface Aabb {
   maxX: number;
   maxY: number;
   minX: number;
   minY: number;
 }
 
-export namespace BoundingBox {
-  export function empty(): BoundingBox {
+export namespace Aabb {
+  export function empty(): Aabb {
     return {
       maxX: -Infinity,
       maxY: -Infinity,
@@ -22,18 +25,18 @@ export namespace BoundingBox {
     };
   }
 
-  export function fromPoints(points: Point[]): BoundingBox {
+  export function fromPoints(points: Point[]): Aabb {
     return points.reduce((bounds, p) => {
       addPointInPlace(bounds, p);
       return bounds;
     }, empty());
   }
 
-  export function isEmpty({ maxX, maxY, minX, minY }: BoundingBox): boolean {
+  export function isEmpty({ maxX, maxY, minX, minY }: Aabb): boolean {
     return minX >= maxX || minY >= maxY;
   }
 
-  export function fromRect({ height, left, top, width }: Rect): BoundingBox {
+  export function fromRect({ height, left, top, width }: Rect): Aabb {
     return {
       maxX: left + width,
       maxY: top + height,
@@ -42,7 +45,7 @@ export namespace BoundingBox {
     };
   }
 
-  export function toRect({ maxX, maxY, minX, minY }: BoundingBox): Rect {
+  export function toRect({ maxX, maxY, minX, minY }: Aabb): Rect {
     return {
       height: maxY - minY,
       left: minX,
@@ -51,7 +54,7 @@ export namespace BoundingBox {
     };
   }
 
-  export function addPoint(bounds: BoundingBox, { x, y }: Point): BoundingBox {
+  export function addPoint(bounds: Aabb, { x, y }: Point): Aabb {
     return {
       maxX: Math.max(bounds.maxX, x),
       maxY: Math.max(bounds.maxY, y),
@@ -60,14 +63,14 @@ export namespace BoundingBox {
     };
   }
 
-  export function addPointInPlace(bounds: BoundingBox, { x, y }: Point): void {
+  export function addPointInPlace(bounds: Aabb, { x, y }: Point): void {
     bounds.minX = Math.min(bounds.minX, x);
     bounds.minY = Math.min(bounds.minY, y);
     bounds.maxX = Math.max(bounds.maxX, x);
     bounds.maxY = Math.max(bounds.maxY, y);
   }
 
-  export function union(...bounds: BoundingBox[]): BoundingBox {
+  export function union(...bounds: Aabb[]): Aabb {
     return bounds.reduce((acc, { maxX, maxY, minX, minY }) => {
       acc.minX = Math.min(acc.minX, minX);
       acc.minY = Math.min(acc.minY, minY);
@@ -79,9 +82,9 @@ export namespace BoundingBox {
 
   /**
    * Rounds the bounds to a given precision.
-   * The result is can't be smaller than the original, but it can be bigger.
+   * The result can't be smaller than the original, but it can be a bit bigger.
    */
-  export function round(bounds: BoundingBox, precision = 2): BoundingBox {
+  export function round(bounds: Aabb, precision = 2): Aabb {
     const multiplier = 10 ** precision;
     return {
       maxX: Math.ceil(bounds.maxX * multiplier) / multiplier,
@@ -95,7 +98,7 @@ export namespace BoundingBox {
    * Checks if a `parent` AABB fully contains (non-inclusive) a `point` Point
    */
   export function includesPoint(
-    { maxX, maxY, minX, minY }: BoundingBox,
+    { maxX, maxY, minX, minY }: Aabb,
     { x, y }: Point,
   ): boolean {
     return maxX > x && maxY > y && minX < x && minY < y;
@@ -104,10 +107,7 @@ export namespace BoundingBox {
   /**
    * Checks if a `parent` AABB fully contains a `child` AABB
    */
-  export function includesBounds(
-    parent: BoundingBox,
-    child: BoundingBox,
-  ): boolean {
+  export function includes(parent: Aabb, child: Aabb): boolean {
     return (
       parent.maxX > child.maxX &&
       parent.maxY > child.maxY &&
@@ -117,9 +117,9 @@ export namespace BoundingBox {
   }
 
   export function expand(
-    { maxX, maxY, minX, minY }: BoundingBox,
+    { maxX, maxY, minX, minY }: Aabb,
     amount: number,
-  ): BoundingBox {
+  ): Aabb {
     return {
       maxX: maxX + amount,
       maxY: maxY + amount,
