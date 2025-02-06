@@ -77,6 +77,10 @@ export namespace BoundingBox {
     }, empty());
   }
 
+  /**
+   * Rounds the bounds to a given precision.
+   * The result is can't be smaller than the original, but it can be bigger.
+   */
   export function round(bounds: BoundingBox, precision = 2): BoundingBox {
     const multiplier = 10 ** precision;
     return {
