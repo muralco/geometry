@@ -89,4 +89,31 @@ export namespace BoundingBox {
   ): boolean {
     return maxX > x && maxY > y && minX < x && minY < y;
   }
+
+  /**
+   * Checks if a `parent` AABB fully contains a `child` AABB
+   */
+  export function includesBounds(
+    parent: BoundingBox,
+    child: BoundingBox,
+  ): boolean {
+    return (
+      parent.maxX > child.maxX &&
+      parent.maxY > child.maxY &&
+      parent.minX < child.minX &&
+      parent.minY < child.minY
+    );
+  }
+
+  export function expand(
+    { maxX, maxY, minX, minY }: BoundingBox,
+    amount: number,
+  ): BoundingBox {
+    return {
+      maxX: maxX + amount,
+      maxY: maxY + amount,
+      minX: minX - amount,
+      minY: minY - amount,
+    };
+  }
 }
