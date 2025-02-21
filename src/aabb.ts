@@ -5,6 +5,14 @@ import { Rect } from '@muralco/types';
 // TODO: Move 'Point' to this package from '@muralco/api/widgets'
 type Point = { x: number; y: number };
 
+// TODO: We should be using `EngineBbox` here but it's not possible to import it
+type Bbox = {
+  x: number;
+  x1: number;
+  y: number;
+  y1: number;
+};
+
 /**
  * Axis-aligned bounding box
  */
@@ -67,6 +75,30 @@ export namespace Aabb {
       left: minX,
       top: minY,
       width: maxX - minX,
+    };
+  }
+
+  /**
+   * Creates an Aabb from a Bbox
+   */
+  export function fromBbox({ x, x1, y, y1 }: Bbox): Aabb {
+    return {
+      maxX: x1,
+      maxY: y1,
+      minX: x,
+      minY: y,
+    };
+  }
+
+  /*
+   * Converts provided Aabb to a Bbox
+   */
+  export function toBbox({ maxX, maxY, minX, minY }: Aabb): Bbox {
+    return {
+      x: minX,
+      x1: maxX,
+      y: minY,
+      y1: maxY,
     };
   }
 
