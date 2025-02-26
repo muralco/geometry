@@ -195,4 +195,19 @@ export namespace Aabb {
       minY: minY - amount,
     };
   }
+
+  /**
+   * Returns the intersection of the provided Aabbs.
+   */
+  export function intersection(...aabbs: Aabb[]): Aabb {
+    return aabbs.reduce(
+      (result, aabb) => ({
+        maxX: Math.min(result.maxX, aabb.maxX),
+        maxY: Math.min(result.maxY, aabb.maxY),
+        minX: Math.max(result.minX, aabb.minX),
+        minY: Math.max(result.minY, aabb.minY),
+      }),
+      empty(),
+    );
+  }
 }
