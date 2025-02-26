@@ -54,6 +54,13 @@ export namespace Aabb {
   }
 
   /**
+   * Check if minX is less than maxX and minY is less than maxY
+   */
+  export function isValid({ maxX, maxY, minX, minY }: Aabb): boolean {
+    return minX <= maxX && minY <= maxY;
+  }
+
+  /**
    * Creates an Aabb from a Rect
    * Rect is a record with `left`, `top`, `width`, and `height` properties.
    */
