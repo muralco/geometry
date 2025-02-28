@@ -96,7 +96,7 @@ export namespace Obb {
    * @param to
    * @returns
    */
-  export function mapToLocal(globalPoint: Point, to: Obb): Point {
+  export function mapToLocal(to: Obb, globalPoint: Point): Point {
     const copy = { ...globalPoint };
     return to.space.reduceRight((accumulator, current) => {
       // ┌                    ┐┌            ┐┌   ┐
@@ -121,14 +121,14 @@ export namespace Obb {
   }
 
   /**
-   * Maps a point in one widget vector space to another widget vector space
-   * @param point
+   * Maps a point in one vector space to another vector space
    * @param from
    * @param to
+   * @param point
    * @returns
    */
-  export function mapTo(point: Point, from: Obb, to: Obb): Point {
-    return Obb.mapToLocal(Obb.mapToGlobal(from, point), to);
+  export function mapTo(from: Obb, to: Obb, point: Point): Point {
+    return Obb.mapToLocal(to, Obb.mapToGlobal(from, point));
   }
 
   /**

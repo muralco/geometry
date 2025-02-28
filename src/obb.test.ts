@@ -127,21 +127,21 @@ describe('Obb', () => {
   describe('mapToLocal', () => {
     it('should map a point from global to local space (identity)', () => {
       const point: Point = { x: 50, y: 100 };
-      const result = Obb.mapToLocal(point, identityObb);
+      const result = Obb.mapToLocal(identityObb, point);
       expect(result.x).toBeCloseTo(50);
       expect(result.y).toBeCloseTo(100);
     });
 
     it('should map a point from global to local space (translation)', () => {
       const point: Point = { x: 150, y: 300 };
-      const result = Obb.mapToLocal(point, translatedObb);
+      const result = Obb.mapToLocal(translatedObb, point);
       expect(result.x).toBeCloseTo(50); // 150 - 100
       expect(result.y).toBeCloseTo(100); // 300 - 200
     });
 
     it('should map a point from global to local space (rotation)', () => {
       const point: Point = { x: -100, y: 50 };
-      const result = Obb.mapToLocal(point, rotatedObb);
+      const result = Obb.mapToLocal(rotatedObb, point);
       expect(result.x).toBeCloseTo(50, 1);
       expect(result.y).toBeCloseTo(100, 1);
     });
@@ -151,7 +151,7 @@ describe('Obb', () => {
       // to ensure round-trip consistency
       const localPoint: Point = { x: 50, y: 100 };
       const globalPoint = Obb.mapToGlobal(complexObb, localPoint);
-      const result = Obb.mapToLocal(globalPoint, complexObb);
+      const result = Obb.mapToLocal(complexObb, globalPoint);
 
       expect(result.x).toBeCloseTo(localPoint.x, 1);
       expect(result.y).toBeCloseTo(localPoint.y, 1);
@@ -161,17 +161,17 @@ describe('Obb', () => {
   describe('mapTo', () => {
     it('should map a point from one Obb to another', () => {
       const point: Point = { x: 50, y: 100 };
-      const result = Obb.mapTo(point, identityObb, translatedObb);
+      const result = Obb.mapTo(identityObb, translatedObb, point);
       expect(result.x).toBeCloseTo(-50); // 50 - 100
       expect(result.y).toBeCloseTo(-100); // 100 - 200
     });
 
     it('should handle complex mappings between Obbs', () => {
       const point: Point = { x: 50, y: 100 };
-      const result = Obb.mapTo(point, identityObb, complexObb);
+      const result = Obb.mapTo(identityObb, complexObb, point);
       // Map from identity to complex - should be the inverse of mapToGlobal for complex
       const globalPoint = Obb.mapToGlobal(identityObb, point);
-      expect(result).toEqual(Obb.mapToLocal(globalPoint, complexObb));
+      expect(result).toEqual(Obb.mapToLocal(complexObb, globalPoint));
     });
   });
 
