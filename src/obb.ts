@@ -55,4 +55,30 @@ export namespace Obb {
       { cosR: 1, sinR: 0 },
     );
   }
+
+  /**
+   * Maps a point in a widget vector space to the global vector space
+   * @param widgetPoint
+   * @param from
+   * @returns
+   */
+  export function mapToGlobalPoint(widgetPoint: Point, from: Obb): Point {
+    const copy = { ...widgetPoint };
+    return from.space.reduce((accumulator, current) => {
+      // ┌           ┐┌                    ┐┌   ┐
+      // │ 1   0   j ││ cos(r)  -sin(r)  0 ││ x │
+      // │ 0   1   k ││ sin(r)   cos(r)  0 ││ y │
+      // │ 0   0   1 ││   0        0     1 ││ 1 │
+      // └           ┘└                    ┘└   ┘
+      const cosR = current.cosR;
+      const sinR = current.sinR;
+      const j = current.origin.x;
+      const k = current.origin.y;
+      const x = accumulator.x;
+      const y = accumulator.y;
+      copy.x = j + x * cosR - y * sinR;
+      copy.y = k + x * sinR + y * cosR;
+      return copy;
+    }, copy);
+  }
 }
