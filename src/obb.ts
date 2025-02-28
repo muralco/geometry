@@ -57,7 +57,7 @@ export namespace Obb {
   }
 
   /**
-   * Maps a point in a widget vector space to the global vector space
+   * Maps a point in vector space to the global vector space
    * @param widgetPoint
    * @param from
    * @returns
@@ -85,7 +85,7 @@ export namespace Obb {
   /**
    * Returns the (0,0) of a widget in global coordinates
    */
-  export function mapWidgetOriginToGlobalPoint(widgetObb: Obb): Point {
+  export function mapOriginToGlobal(widgetObb: Obb): Point {
     return Obb.mapToGlobal({ x: 0, y: 0 }, widgetObb);
   }
 }
