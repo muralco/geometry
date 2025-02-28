@@ -1,9 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import { Rect } from '@muralco/types';
-
-// TODO: Move 'Point' to this package from '@muralco/api/widgets'
-type Point = { x: number; y: number };
+import { Point } from './types';
 
 // TODO: We should be using `EngineBbox` here but it's not possible to import it
 type Bbox = {
