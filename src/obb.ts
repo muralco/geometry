@@ -86,14 +86,14 @@ export namespace Obb {
   /**
    * Returns the (0,0) of a widget in global coordinates
    */
-  export function mapOriginToGlobal(widgetObb: Obb): Point {
-    return Obb.mapToGlobal(widgetObb, { x: 0, y: 0 });
+  export function mapOriginToGlobal(obb: Obb): Point {
+    return Obb.mapToGlobal(obb, { x: 0, y: 0 });
   }
 
   /**
    * Maps a point in the global vector space to a local vector space
-   * @param globalPoint
    * @param to
+   * @param globalPoint
    * @returns
    */
   export function mapToLocal(to: Obb, globalPoint: Point): Point {
