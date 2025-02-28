@@ -1,3 +1,4 @@
+import { Aabb } from './aabb';
 import { Point } from './types';
 
 /**
@@ -128,5 +129,22 @@ export namespace Obb {
    */
   export function mapTo(point: Point, from: Obb, to: Obb): Point {
     return Obb.mapToLocal(Obb.mapToGlobal(point, from), to);
+  }
+
+  /**
+   * Takes an oriented bounding box and returns the global
+   * axis aligned bounding box
+   * @param obb
+   * @returns
+   */
+  export function getGlobalAabbFromObb(obb: Obb): Aabb {
+    return Aabb.fromPoints(
+      [
+        { x: 0, y: 0 },
+        { x: 0, y: obb.size.height },
+        { x: obb.size.width, y: 0 },
+        { x: obb.size.width, y: obb.size.height },
+      ].map(p => Obb.mapToGlobal(p, obb)),
+    );
   }
 }
