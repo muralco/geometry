@@ -126,11 +126,7 @@ export namespace Obb {
    * @param to
    * @returns
    */
-  export function mapBetweenWidgetsPoint(
-    point: Point,
-    from: Obb,
-    to: Obb,
-  ): Point {
+  export function mapTo(point: Point, from: Obb, to: Obb): Point {
     return Obb.mapToLocal(Obb.mapToGlobal(point, from), to);
   }
 }
