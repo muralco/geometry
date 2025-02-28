@@ -40,4 +40,19 @@ export namespace Obb {
   export function getLocalPosition(obb: Obb): Point {
     return obb.space[0].origin;
   }
+
+  // the angle sum rule
+  // cos(α+β) = cos(α).cos(β)−sin(α).sin(β)
+  // sin(α+β) = sin(α).cos(β)+cos(α).sin(β)
+  export function getTotalCosSin(obb: Obb): { cosR: number; sinR: number } {
+    return obb.space.reduce(
+      (acc, curr) => {
+        return {
+          cosR: acc.cosR * curr.cosR - acc.sinR * curr.sinR,
+          sinR: acc.sinR * curr.cosR + acc.cosR * curr.sinR,
+        };
+      },
+      { cosR: 1, sinR: 0 },
+    );
+  }
 }
