@@ -96,21 +96,21 @@ describe('Obb', () => {
   describe('mapToGlobal', () => {
     it('should map a point from local to global space (identity)', () => {
       const point: Point = { x: 50, y: 100 };
-      const result = Obb.mapToGlobal(point, identityObb);
+      const result = Obb.mapToGlobal(identityObb, point);
       expect(result.x).toBeCloseTo(50);
       expect(result.y).toBeCloseTo(100);
     });
 
     it('should map a point from local to global space (translation)', () => {
       const point: Point = { x: 50, y: 100 };
-      const result = Obb.mapToGlobal(point, translatedObb);
+      const result = Obb.mapToGlobal(translatedObb, point);
       expect(result.x).toBeCloseTo(150); // 100 + 50
       expect(result.y).toBeCloseTo(300); // 200 + 100
     });
 
     it('should map a point from local to global space (rotation)', () => {
       const point: Point = { x: 50, y: 100 };
-      const result = Obb.mapToGlobal(point, rotatedObb);
+      const result = Obb.mapToGlobal(rotatedObb, point);
       expect(result.x).toBeCloseTo(-100); // 0 + 50*0 - 100*1
       expect(result.y).toBeCloseTo(50); // 0 + 50*1 + 100*0
     });
@@ -150,7 +150,7 @@ describe('Obb', () => {
       // Instead of using the specific global point from previous test, we'll use point mapping functions
       // to ensure round-trip consistency
       const localPoint: Point = { x: 50, y: 100 };
-      const globalPoint = Obb.mapToGlobal(localPoint, complexObb);
+      const globalPoint = Obb.mapToGlobal(complexObb, localPoint);
       const result = Obb.mapToLocal(globalPoint, complexObb);
 
       expect(result.x).toBeCloseTo(localPoint.x, 1);
@@ -170,7 +170,7 @@ describe('Obb', () => {
       const point: Point = { x: 50, y: 100 };
       const result = Obb.mapTo(point, identityObb, complexObb);
       // Map from identity to complex - should be the inverse of mapToGlobal for complex
-      const globalPoint = Obb.mapToGlobal(point, identityObb);
+      const globalPoint = Obb.mapToGlobal(identityObb, point);
       expect(result).toEqual(Obb.mapToLocal(globalPoint, complexObb));
     });
   });

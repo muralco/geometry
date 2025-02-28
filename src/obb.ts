@@ -63,7 +63,7 @@ export namespace Obb {
    * @param from
    * @returns
    */
-  export function mapToGlobal(widgetPoint: Point, from: Obb): Point {
+  export function mapToGlobal(from: Obb, widgetPoint: Point): Point {
     const copy = { ...widgetPoint };
     return from.space.reduce((accumulator, current) => {
       // ┌           ┐┌                    ┐┌   ┐
@@ -87,7 +87,7 @@ export namespace Obb {
    * Returns the (0,0) of a widget in global coordinates
    */
   export function mapOriginToGlobal(widgetObb: Obb): Point {
-    return Obb.mapToGlobal({ x: 0, y: 0 }, widgetObb);
+    return Obb.mapToGlobal(widgetObb, { x: 0, y: 0 });
   }
 
   /**
@@ -128,7 +128,7 @@ export namespace Obb {
    * @returns
    */
   export function mapTo(point: Point, from: Obb, to: Obb): Point {
-    return Obb.mapToLocal(Obb.mapToGlobal(point, from), to);
+    return Obb.mapToLocal(Obb.mapToGlobal(from, point), to);
   }
 
   /**
@@ -144,7 +144,7 @@ export namespace Obb {
         { x: 0, y: obb.size.height },
         { x: obb.size.width, y: 0 },
         { x: obb.size.width, y: obb.size.height },
-      ].map(p => Obb.mapToGlobal(p, obb)),
+      ].map(p => Obb.mapToGlobal(obb, p)),
     );
   }
 }
