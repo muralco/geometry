@@ -13,7 +13,7 @@ export interface Obb {
 export namespace Obb {
   /**
    * Scales a point inside an oriented bounding box. Very useful to
-   * map points inside a widgets when it's scaled
+   * map points inside an obb when it's scaled
    * @param prevObb the original obb
    * @param point the point to scale
    * @param nextObb the new obb after scaling
@@ -59,12 +59,12 @@ export namespace Obb {
 
   /**
    * Maps a point in vector space to the global vector space
-   * @param widgetPoint
+   * @param localPoint
    * @param from
    * @returns
    */
-  export function mapToGlobal(from: Obb, widgetPoint: Point): Point {
-    const copy = { ...widgetPoint };
+  export function mapToGlobal(from: Obb, localPoint: Point): Point {
+    const copy = { ...localPoint };
     return from.space.reduce((accumulator, current) => {
       // ┌           ┐┌                    ┐┌   ┐
       // │ 1   0   j ││ cos(r)  -sin(r)  0 ││ x │
@@ -84,7 +84,7 @@ export namespace Obb {
   }
 
   /**
-   * Returns the (0,0) of a widget in global coordinates
+   * Returns the (0,0) of an obb in global coordinates
    */
   export function mapOriginToGlobal(obb: Obb): Point {
     return Obb.mapToGlobal(obb, { x: 0, y: 0 });
