@@ -118,4 +118,19 @@ export namespace Obb {
       return copy;
     }, globalPoint);
   }
+
+  /**
+   * Maps a point in one widget vector space to another widget vector space
+   * @param point
+   * @param from
+   * @param to
+   * @returns
+   */
+  export function mapBetweenWidgetsPoint(
+    point: Point,
+    from: Obb,
+    to: Obb,
+  ): Point {
+    return Obb.mapToLocal(Obb.mapToGlobal(point, from), to);
+  }
 }
