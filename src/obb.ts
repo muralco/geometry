@@ -81,4 +81,11 @@ export namespace Obb {
       return copy;
     }, copy);
   }
+
+  /**
+   * Returns the (0,0) of a widget in global coordinates
+   */
+  export function mapWidgetOriginToGlobalPoint(widgetObb: Obb): Point {
+    return Obb.mapToGlobal({ x: 0, y: 0 }, widgetObb);
+  }
 }
