@@ -137,7 +137,7 @@ export namespace Obb {
    * @param obb
    * @returns
    */
-  export function getGlobalAabbFromObb(obb: Obb): Aabb {
+  export function toAabb(obb: Obb): Aabb {
     return Aabb.fromPoints(
       [
         { x: 0, y: 0 },
