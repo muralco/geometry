@@ -62,7 +62,7 @@ export namespace Obb {
    * @param from
    * @returns
    */
-  export function mapToGlobalPoint(widgetPoint: Point, from: Obb): Point {
+  export function mapToGlobal(widgetPoint: Point, from: Obb): Point {
     const copy = { ...widgetPoint };
     return from.space.reduce((accumulator, current) => {
       // ┌           ┐┌                    ┐┌   ┐
