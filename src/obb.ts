@@ -31,4 +31,13 @@ export namespace Obb {
       y: (point.y / prevHeight) * nextHeight,
     };
   }
+
+  /**
+   * Returns the local position of a Obb
+   * @param obb
+   * @returns
+   */
+  export function getLocalPosition(obb: Obb): Point {
+    return obb.space[0].origin;
+  }
 }
