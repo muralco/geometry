@@ -14,12 +14,12 @@ export namespace Obb {
   /**
    * Scales a point inside an oriented bounding box. Very useful to
    * map points inside a widgets when it's scaled
-   * @param point
-   * @param prevObb
-   * @param nextObb
+   * @param prevObb the original obb
+   * @param point the point to scale
+   * @param nextObb the new obb after scaling
    * @returns
    */
-  export function scalePoint(point: Point, prevObb: Obb, nextObb: Obb): Point {
+  export function scalePoint(prevObb: Obb, point: Point, nextObb: Obb): Point {
     // In the testing rig we have multiple test cases
     // producing widgets with width or height equal to
     // zero

@@ -39,7 +39,7 @@ describe('Obb', () => {
         space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
       };
 
-      const result = Obb.scalePoint(point, prevObb, nextObb);
+      const result = Obb.scalePoint(prevObb, point, nextObb);
       expect(result.x).toEqual(100); // 50 * (200/100)
       expect(result.y).toEqual(200); // 100 * (400/200)
     });
@@ -55,7 +55,7 @@ describe('Obb', () => {
         space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
       };
 
-      const result = Obb.scalePoint(point, prevObb, nextObb);
+      const result = Obb.scalePoint(prevObb, point, nextObb);
       expect(result.x).toEqual(50 * 200); // Using 1 as denominator
       expect(result.y).toEqual(100 * 400); // Using 1 as denominator
     });
