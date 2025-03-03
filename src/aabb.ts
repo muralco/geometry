@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-
 import { Rect } from '@muralco/types';
 import { Point } from './types';
 
@@ -31,6 +30,40 @@ export namespace Aabb {
       maxY: -Infinity,
       minX: Infinity,
       minY: Infinity,
+    };
+  }
+
+  /**
+   * Creates an Aabb from left, top, right, and bottom.
+   */
+  export function fromLtrb(
+    left: number,
+    top: number,
+    right: number,
+    bottom: number,
+  ): Aabb {
+    return {
+      maxX: right,
+      maxY: bottom,
+      minX: left,
+      minY: top,
+    };
+  }
+
+  /**
+   * Creates an Aabb from left, top, width, and height.
+   */
+  export function fromLtwh(
+    left: number,
+    top: number,
+    width: number,
+    height: number,
+  ): Aabb {
+    return {
+      maxX: left + width,
+      maxY: top + height,
+      minX: left,
+      minY: top,
     };
   }
 
@@ -178,10 +211,22 @@ export namespace Aabb {
    */
   export function includes(parent: Aabb, child: Aabb): boolean {
     return (
-      parent.maxX > child.maxX &&
-      parent.maxY > child.maxY &&
-      parent.minX < child.minX &&
-      parent.minY < child.minY
+      parent.maxX >= child.maxX &&
+      parent.maxY >= child.maxY &&
+      parent.minX <= child.minX &&
+      parent.minY <= child.minY
+    );
+  }
+
+  /**
+   * Checks if one Aabb intersects another.
+   */
+  export function intersects(a: Aabb, b: Aabb): boolean {
+    return (
+      a.minX <= b.maxX &&
+      a.maxX >= b.minX &&
+      a.minY <= b.maxY &&
+      a.maxY >= b.minY
     );
   }
 
@@ -213,6 +258,16 @@ export namespace Aabb {
         minY: Math.max(result.minY, aabb.minY),
       }),
       empty(),
+    );
+  }
+
+  export function equals(a: Aabb, b: Aabb): boolean {
+    return (
+      (!isValid(a) && !isValid(b)) ||
+      (a.maxX === b.maxX &&
+        a.maxY === b.maxY &&
+        a.minX === b.minX &&
+        a.minY === b.minY)
     );
   }
 }
