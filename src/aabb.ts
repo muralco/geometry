@@ -261,6 +261,13 @@ export namespace Aabb {
     );
   }
 
+  export function getCenter(aabb: Aabb): Point {
+    return {
+      x: (aabb.minX + aabb.maxX) / 2,
+      y: (aabb.minY + aabb.maxY) / 2,
+    };
+  }
+
   export function equals(a: Aabb, b: Aabb): boolean {
     return (
       (!isValid(a) && !isValid(b)) ||
