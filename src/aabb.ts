@@ -250,15 +250,18 @@ export namespace Aabb {
    * Returns the intersection of the provided Aabbs.
    */
   export function intersection(...aabbs: Aabb[]): Aabb {
-    return aabbs.reduce(
-      (result, aabb) => ({
-        maxX: Math.min(result.maxX, aabb.maxX),
-        maxY: Math.min(result.maxY, aabb.maxY),
-        minX: Math.max(result.minX, aabb.minX),
-        minY: Math.max(result.minY, aabb.minY),
-      }),
-      empty(),
-    );
+    if (aabbs.length === 0) return empty();
+    const result = clone(aabbs[0]);
+
+    for (let i = 1; i < aabbs.length; i += 1) {
+      const { maxX, maxY, minX, minY } = aabbs[i];
+      result.minX = Math.max(result.minX, minX);
+      result.minY = Math.max(result.minY, minY);
+      result.maxX = Math.min(result.maxX, maxX);
+      result.maxY = Math.min(result.maxY, maxY);
+    }
+
+    return result;
   }
 
   export function getCenter(aabb: Aabb): Point {
@@ -276,5 +279,26 @@ export namespace Aabb {
         a.minX === b.minX &&
         a.minY === b.minY)
     );
+  }
+
+  export function width(aabb: Aabb): number {
+    return Math.max(0, aabb.maxX - aabb.minX);
+  }
+
+  export function height(aabb: Aabb): number {
+    return Math.max(0, aabb.maxY - aabb.minY);
+  }
+
+  export function area(aabb: Aabb): number {
+    return width(aabb) * height(aabb);
+  }
+
+  export function clone({ maxX, maxY, minX, minY }: Aabb): Aabb {
+    return {
+      maxX,
+      maxY,
+      minX,
+      minY,
+    };
   }
 }

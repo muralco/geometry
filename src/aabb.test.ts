@@ -83,4 +83,16 @@ describe('Aabb', () => {
     const expandedBounds = Aabb.expand(bounds, 1);
     expect(expandedBounds).toEqual({ maxX: 2, maxY: 4, minX: -3, minY: -1 });
   });
+
+  it('should compute intersection', () => {
+    const b1 = Aabb.fromLtwh(10, 10, 100, 100);
+    const b2 = Aabb.fromLtwh(50, 50, 100, 100);
+    expect(Aabb.intersection(b1, b2)).toEqual(Aabb.fromLtrb(50, 50, 110, 110));
+  });
+
+  it('compute intersection of non-overlapping bounds', () => {
+    const b1 = Aabb.fromLtwh(10, 10, 100, 100);
+    const b2 = Aabb.fromLtwh(200, 200, 100, 100);
+    expect(Aabb.isEmpty(Aabb.intersection(b1, b2))).toBe(true);
+  });
 });
