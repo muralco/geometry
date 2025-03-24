@@ -2,6 +2,13 @@
 import { Rect } from '@muralco/types';
 import { Bbox, Point } from './external-types';
 
+interface AabbData {
+  maxX: number;
+  maxY: number;
+  minX: number;
+  minY: number;
+}
+
 /**
  * Axis-aligned bounding box
  */
@@ -161,8 +168,10 @@ export class Aabb {
   }
 
   unionInPlace({ maxX, maxY, minX, minY }: Aabb): void {
-    this.addXYInPlace(minX, minY);
-    this.addXYInPlace(maxX, maxY);
+    this.minX = Math.min(this.minX, minX);
+    this.minY = Math.min(this.minY, minY);
+    this.maxX = Math.max(this.maxX, maxX);
+    this.maxY = Math.max(this.maxY, maxY);
   }
 
   /**
@@ -172,13 +181,13 @@ export class Aabb {
    * The precision is the number of decimal places to round to.
    * By default, it rounds to 2 decimal places.
    */
-  round(aabb: Aabb, precision = 2): Aabb {
+  round(precision = 2): Aabb {
     const multiplier = 10 ** precision;
     return new Aabb(
-      Math.floor(aabb.minX * multiplier) / multiplier,
-      Math.floor(aabb.minY * multiplier) / multiplier,
-      Math.ceil(aabb.maxX * multiplier) / multiplier,
-      Math.ceil(aabb.maxY * multiplier) / multiplier,
+      Math.floor(this.minX * multiplier) / multiplier,
+      Math.floor(this.minY * multiplier) / multiplier,
+      Math.ceil(this.maxX * multiplier) / multiplier,
+      Math.ceil(this.maxY * multiplier) / multiplier,
     );
   }
 
@@ -294,6 +303,15 @@ export class Aabb {
 
   clone(): Aabb {
     const { maxX, maxY, minX, minY } = this;
+    return new Aabb(minX, minY, maxX, maxY);
+  }
+
+  toJSON(): AabbData {
+    const { maxX, maxY, minX, minY } = this;
+    return { maxX, maxY, minX, minY };
+  }
+
+  static fromJSON({ maxX, maxY, minX, minY }: AabbData): Aabb {
     return new Aabb(minX, minY, maxX, maxY);
   }
 }
