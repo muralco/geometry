@@ -1,6 +1,6 @@
 import { Aabb } from './aabb';
+import { Point } from './external-types';
 import { Obb } from './obb';
-import { Point } from './types';
 
 describe('Obb', () => {
   // Sample Obb objects for testing
@@ -177,67 +177,15 @@ describe('Obb', () => {
 
   describe('toAabb', () => {
     it('should convert an identity Obb to Aabb', () => {
-      // Mock the Aabb.fromPoints function
-      const mockFromPoints = jest.spyOn(Aabb, 'fromPoints');
-      mockFromPoints.mockImplementation((points: Point[]) => {
-        // Implementation to return the Aabb with the correct structure
-        return {
-          maxX: Math.max(...points.map(p => p.x)),
-          maxY: Math.max(...points.map(p => p.y)),
-          minX: Math.min(...points.map(p => p.x)),
-          minY: Math.min(...points.map(p => p.y)),
-        };
-      });
-
       const result = Obb.toAabb(identityObb);
 
-      expect(mockFromPoints).toHaveBeenCalledWith([
-        { x: 0, y: 0 },
-        { x: 0, y: 200 },
-        { x: 100, y: 0 },
-        { x: 100, y: 200 },
-      ]);
-
-      expect(result).toEqual({
-        maxX: 100,
-        maxY: 200,
-        minX: 0,
-        minY: 0,
-      });
-
-      mockFromPoints.mockRestore();
+      expect(result).toEqual(new Aabb(0, 0, 100, 200));
     });
 
     it('should handle rotated Obb conversion to Aabb', () => {
-      // Mock the Aabb.fromPoints function
-      const mockFromPoints = jest.spyOn(Aabb, 'fromPoints');
-      mockFromPoints.mockImplementation((points: Point[]) => {
-        return {
-          maxX: Math.max(...points.map(p => p.x)),
-          maxY: Math.max(...points.map(p => p.y)),
-          minX: Math.min(...points.map(p => p.x)),
-          minY: Math.min(...points.map(p => p.y)),
-        };
-      });
-
       const result = Obb.toAabb(rotatedObb);
 
-      // In a 90-degree rotation, the width becomes height and vice versa
-      expect(mockFromPoints).toHaveBeenCalledWith([
-        { x: 0, y: 0 },
-        { x: -200, y: 0 },
-        { x: 0, y: 100 },
-        { x: -200, y: 100 },
-      ]);
-
-      expect(result).toEqual({
-        maxX: 0,
-        maxY: 100,
-        minX: -200,
-        minY: 0,
-      });
-
-      mockFromPoints.mockRestore();
+      expect(result).toEqual(new Aabb(-200, 0, 0, 100));
     });
   });
 });
