@@ -1,5 +1,5 @@
 import { Aabb } from './aabb';
-import { Point } from './types';
+import { Point } from './external-types';
 
 /**
  * Oriented Bounding Box

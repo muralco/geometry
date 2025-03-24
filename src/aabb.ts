@@ -1,93 +1,75 @@
 /* eslint-disable no-param-reassign */
 import { Rect } from '@muralco/types';
-import { Point } from './types';
-
-// TODO: We should be using `EngineBbox` here but it's not possible to import it
-type Bbox = {
-  x: number;
-  x1: number;
-  y: number;
-  y1: number;
-};
+import { Bbox, Point } from './external-types';
 
 /**
  * Axis-aligned bounding box
  */
-export interface Aabb {
-  maxX: number;
-  maxY: number;
-  minX: number;
-  minY: number;
-}
+export class Aabb {
+  constructor();
+  constructor(minX: number, minY: number, maxX: number, maxY: number);
+  constructor(
+    public minX = Infinity,
+    public minY = Infinity,
+    public maxX = -Infinity,
+    public maxY = -Infinity,
+  ) {}
 
-export namespace Aabb {
   /**
    * Returns an empty Aabb
    */
-  export function empty(): Aabb {
-    return {
-      maxX: -Infinity,
-      maxY: -Infinity,
-      minX: Infinity,
-      minY: Infinity,
-    };
+  static empty(): Aabb {
+    return new Aabb();
   }
 
   /**
    * Creates an Aabb from left, top, right, and bottom.
    */
-  export function fromLtrb(
+  static fromLtrb(
     left: number,
     top: number,
     right: number,
     bottom: number,
   ): Aabb {
-    return {
-      maxX: right,
-      maxY: bottom,
-      minX: left,
-      minY: top,
-    };
+    return new Aabb(left, top, right, bottom);
   }
 
   /**
    * Creates an Aabb from left, top, width, and height.
    */
-  export function fromLtwh(
+  static fromLtwh(
     left: number,
     top: number,
     width: number,
     height: number,
   ): Aabb {
-    return {
-      maxX: left + width,
-      maxY: top + height,
-      minX: left,
-      minY: top,
-    };
+    return new Aabb(left, top, left + width, top + height);
   }
 
   /**
    * Returns an Aabb that contains all the given points
    */
-  export function fromPoints(points: Point[]): Aabb {
-    return points.reduce((bounds, p) => {
-      addPointInPlace(bounds, p);
-      return bounds;
-    }, empty());
+  static fromPoints(points: Point[]): Aabb {
+    const result = new Aabb();
+    for (const point of points) {
+      result.addPointInPlace(point);
+    }
+    return result;
   }
 
   /**
    * Checks if the given Aabb is empty
    */
-  export function isEmpty({ maxX, maxY, minX, minY }: Aabb): boolean {
+  isEmpty(): boolean {
+    const { maxX, maxY, minX, minY } = this;
     return minX >= maxX || minY >= maxY;
   }
 
   /**
    * Check if minX is less than maxX and minY is less than maxY
    */
-  export function isValid({ maxX, maxY, minX, minY }: Aabb): boolean {
+  isValid(): boolean {
+    const { maxX, maxY, minX, minY } = this;
     return minX <= maxX && minY <= maxY;
   }
 
@@ -95,19 +77,15 @@ export namespace Aabb {
    * Creates an Aabb from a Rect
    * Rect is a record with `left`, `top`, `width`, and `height` properties.
    */
-  export function fromRect({ height, left, top, width }: Rect): Aabb {
-    return {
-      maxX: left + width,
-      maxY: top + height,
-      minX: left,
-      minY: top,
-    };
+  static fromRect({ height, left, top, width }: Rect): Aabb {
+    return new Aabb(left, top, left + width, top + height);
   }
 
   /**
    * Converts provided Aabb to a Rect
    */
-  export function toRect({ maxX, maxY, minX, minY }: Aabb): Rect {
+  toRect(): Rect {
+    const { maxX, maxY, minX, minY } = this;
     return {
       height: maxY - minY,
       left: minX,
@@ -119,19 +97,15 @@ export namespace Aabb {
   /**
    * Creates an Aabb from a Bbox
    */
-  export function fromBbox({ x, x1, y, y1 }: Bbox): Aabb {
-    return {
-      maxX: x1,
-      maxY: y1,
-      minX: x,
-      minY: y,
-    };
+  static fromBbox({ x, x1, y, y1 }: Bbox): Aabb {
+    return new Aabb(x, y, x1, y1);
   }
 
   /*
    * Converts provided Aabb to a Bbox
    */
-  export function toBbox({ maxX, maxY, minX, minY }: Aabb): Bbox {
+  toBbox(): Bbox {
+    const { maxX, maxY, minX, minY } = this;
     return {
       x: minX,
       x1: maxX,
@@ -145,38 +119,50 @@ export namespace Aabb {
    * Since this functions creates a new object, it's not recommended to use it in a loop.
    * Use `addPointInPlace` instead in such cases.
    */
-  export function addPoint(aabb: Aabb, { x, y }: Point): Aabb {
-    return {
-      maxX: Math.max(aabb.maxX, x),
-      maxY: Math.max(aabb.maxY, y),
-      minX: Math.min(aabb.minX, x),
-      minY: Math.min(aabb.minY, y),
-    };
+  addPoint({ x, y }: Point): Aabb {
+    return new Aabb(
+      Math.min(this.minX, x),
+      Math.min(this.minY, y),
+      Math.max(this.maxX, x),
+      Math.max(this.maxY, y),
+    );
   }
 
   /**
    * Adds a point to the aabb in place.
    * This function mutates the provided object. Use it in a loop to avoid creating temporary objects.
    */
-  export function addPointInPlace(bounds: Aabb, { x, y }: Point): void {
-    bounds.minX = Math.min(bounds.minX, x);
-    bounds.minY = Math.min(bounds.minY, y);
-    bounds.maxX = Math.max(bounds.maxX, x);
-    bounds.maxY = Math.max(bounds.maxY, y);
+  addPointInPlace({ x, y }: Point): void {
+    this.addXYInPlace(x, y);
+  }
+
+  addXYInPlace(x: number, y: number): void {
+    this.minX = Math.min(this.minX, x);
+    this.minY = Math.min(this.minY, y);
+    this.maxX = Math.max(this.maxX, x);
+    this.maxY = Math.max(this.maxY, y);
   }
 
   /**
    * Returns the union of the provided bounds.
    * The result contains every provided aabb.
    */
-  export function union(...aabbs: Aabb[]): Aabb {
-    return aabbs.reduce((acc, { maxX, maxY, minX, minY }) => {
-      acc.minX = Math.min(acc.minX, minX);
-      acc.minY = Math.min(acc.minY, minY);
-      acc.maxX = Math.max(acc.maxX, maxX);
-      acc.maxY = Math.max(acc.maxY, maxY);
+  static union(...aabbs: Aabb[]): Aabb {
+    return aabbs.reduce((acc: Aabb, item: Aabb) => {
+      acc.unionInPlace(item);
       return acc;
-    }, empty());
+    }, new Aabb());
+  }
+
+  union(other: Aabb): Aabb {
+    const result = this.clone();
+    result.unionInPlace(other);
+    return result;
+  }
+
+  unionInPlace({ maxX, maxY, minX, minY }: Aabb): void {
+    this.addXYInPlace(minX, minY);
+    this.addXYInPlace(maxX, maxY);
   }
 
   /**
@@ -186,47 +172,45 @@ export namespace Aabb {
    * The precision is the number of decimal places to round to.
    * By default, it rounds to 2 decimal places.
    */
-  export function round(aabb: Aabb, precision = 2): Aabb {
+  round(aabb: Aabb, precision = 2): Aabb {
     const multiplier = 10 ** precision;
-    return {
-      maxX: Math.ceil(aabb.maxX * multiplier) / multiplier,
-      maxY: Math.ceil(aabb.maxY * multiplier) / multiplier,
-      minX: Math.floor(aabb.minX * multiplier) / multiplier,
-      minY: Math.floor(aabb.minY * multiplier) / multiplier,
-    };
+    return new Aabb(
+      Math.floor(aabb.minX * multiplier) / multiplier,
+      Math.floor(aabb.minY * multiplier) / multiplier,
+      Math.ceil(aabb.maxX * multiplier) / multiplier,
+      Math.ceil(aabb.maxY * multiplier) / multiplier,
+    );
   }
 
   /**
    * Checks if a `parent` Aabb contains (non-inclusive) a point.
    */
-  export function includesPoint(
-    { maxX, maxY, minX, minY }: Aabb,
-    { x, y }: Point,
-  ): boolean {
+  includesPoint({ x, y }: Point): boolean {
+    const { maxX, maxY, minX, minY } = this;
     return maxX > x && maxY > y && minX < x && minY < y;
   }
 
   /**
    * Checks if a `parent` Aabb fully contains a `child` Aabb.
    */
-  export function includes(parent: Aabb, child: Aabb): boolean {
+  includes(child: Aabb): boolean {
     return (
-      parent.maxX >= child.maxX &&
-      parent.maxY >= child.maxY &&
-      parent.minX <= child.minX &&
-      parent.minY <= child.minY
+      this.maxX >= child.maxX &&
+      this.maxY >= child.maxY &&
+      this.minX <= child.minX &&
+      this.minY <= child.minY
     );
   }
 
   /**
    * Checks if one Aabb intersects another.
    */
-  export function intersects(a: Aabb, b: Aabb): boolean {
+  intersects(other: Aabb): boolean {
     return (
-      a.minX <= b.maxX &&
-      a.maxX >= b.minX &&
-      a.minY <= b.maxY &&
-      a.maxY >= b.minY
+      this.minX <= other.maxX &&
+      this.maxX >= other.minX &&
+      this.minY <= other.maxY &&
+      this.maxY >= other.minY
     );
   }
 
@@ -234,76 +218,82 @@ export namespace Aabb {
    * Expands the bounds by the given amount (adds padding).
    * The amount can be negative.
    */
-  export function expand(
-    { maxX, maxY, minX, minY }: Aabb,
-    amount: number,
-  ): Aabb {
-    return {
-      maxX: maxX + amount,
-      maxY: maxY + amount,
-      minX: minX - amount,
-      minY: minY - amount,
-    };
+  expand(amount: number): Aabb {
+    const { maxX, maxY, minX, minY } = this;
+    return new Aabb(minX - amount, minY - amount, maxX + amount, maxY + amount);
+  }
+
+  /**
+   * Shrink the bounds by the given amount from each side.
+   */
+  shrink(amount: number): Aabb {
+    return this.expand(-amount);
   }
 
   /**
    * Returns the intersection of the provided Aabbs.
    */
-  export function intersection(...aabbs: Aabb[]): Aabb {
-    if (aabbs.length === 0) return empty();
-    let { maxX, maxY, minX, minY } = aabbs[0];
-
-    for (let i = 1; i < aabbs.length; i += 1) {
-      const aabb = aabbs[i];
-      minX = Math.max(minX, aabb.minX);
-      minY = Math.max(minY, aabb.minY);
-      maxX = Math.min(maxX, aabb.maxX);
-      maxY = Math.min(maxY, aabb.maxY);
+  static intersection(...aabbs: Aabb[]): Aabb {
+    if (aabbs.length === 0) return new Aabb();
+    const result = aabbs[0].clone();
+    for (let i = 1; i < aabbs.length; i++) {
+      result.intersectionInPlace(aabbs[i]);
     }
+    return result;
+  }
 
+  intersection(other: Aabb): Aabb {
+    const result = this.clone();
+    result.intersectionInPlace(other);
+    return result;
+  }
+
+  intersectionInPlace(other: Aabb): void {
+    this.minX = Math.max(this.minX, other.minX);
+    this.minY = Math.max(this.minY, other.minY);
+    this.maxX = Math.min(this.maxX, other.maxX);
+    this.maxY = Math.min(this.maxY, other.maxY);
+  }
+
+  get center(): Point {
     return {
-      maxX,
-      maxY,
-      minX,
-      minY,
+      x: (this.minX + this.maxX) / 2,
+      y: (this.minY + this.maxY) / 2,
     };
   }
 
-  export function getCenter(aabb: Aabb): Point {
-    return {
-      x: (aabb.minX + aabb.maxX) / 2,
-      y: (aabb.minY + aabb.maxY) / 2,
-    };
-  }
-
-  export function equals(a: Aabb, b: Aabb): boolean {
+  equals(other: Aabb): boolean {
     return (
-      (!isValid(a) && !isValid(b)) ||
-      (a.maxX === b.maxX &&
-        a.maxY === b.maxY &&
-        a.minX === b.minX &&
-        a.minY === b.minY)
+      (!this.isValid() && !other.isValid()) ||
+      (this.maxX === other.maxX &&
+        this.maxY === other.maxY &&
+        this.minX === other.minX &&
+        this.minY === other.minY)
     );
   }
 
-  export function width(aabb: Aabb): number {
-    return Math.max(0, aabb.maxX - aabb.minX);
+  get x(): number {
+    return this.minX;
   }
 
-  export function height(aabb: Aabb): number {
-    return Math.max(0, aabb.maxY - aabb.minY);
+  get y(): number {
+    return this.minY;
   }
 
-  export function area(aabb: Aabb): number {
-    return width(aabb) * height(aabb);
+  get width(): number {
+    return Math.max(0, this.maxX - this.minX);
   }
 
-  export function clone({ maxX, maxY, minX, minY }: Aabb): Aabb {
-    return {
-      maxX,
-      maxY,
-      minX,
-      minY,
-    };
+  get height(): number {
+    return Math.max(0, this.maxY - this.minY);
+  }
+
+  get area(): number {
+    return this.width * this.height;
+  }
+
+  clone(): Aabb {
+    const { maxX, maxY, minX, minY } = this;
+    return new Aabb(minX, minY, maxX, maxY);
   }
 }
