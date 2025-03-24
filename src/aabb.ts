@@ -289,6 +289,14 @@ export class Aabb {
     return this.minY;
   }
 
+  get left(): number {
+    return this.minX;
+  }
+
+  get top(): number {
+    return this.minY;
+  }
+
   get width(): number {
     return Math.max(0, this.maxX - this.minX);
   }
