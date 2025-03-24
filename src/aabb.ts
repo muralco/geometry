@@ -326,4 +326,8 @@ export class Aabb {
   static fromJSON({ maxX, maxY, minX, minY }: AabbData): Aabb {
     return new Aabb(minX, minY, maxX, maxY);
   }
+
+  toString(): string {
+    return `Aabb(${this.minX}, ${this.minY}, ${this.maxX}, ${this.maxY})`;
+  }
 }
