@@ -64,6 +64,10 @@ export class Aabb {
     return result;
   }
 
+  static fromPoint({ x, y }: Point): Aabb {
+    return new Aabb(x, y, x, y);
+  }
+
   /**
    * Checks if the given Aabb is empty
    */
@@ -305,7 +309,7 @@ export class Aabb {
     return Math.max(0, this.maxY - this.minY);
   }
 
-  get area(): number {
+  getArea(): number {
     return this.width * this.height;
   }
 
