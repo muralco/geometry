@@ -216,6 +216,48 @@ export class Aabb {
   }
 
   /**
+   * Shifts the bounds by the given amount.
+   */
+  translate({ x: dx, y: dy }: Point): Aabb {
+    return new Aabb(
+      this.minX + dx,
+      this.minY + dy,
+      this.maxX + dx,
+      this.maxY + dy,
+    );
+  }
+
+  /**
+   * Scales the bounds by the given factor.
+   * The origin is the point to scale from.
+   * By default, the origin is (0, 0).
+   */
+  scale(factor: number, origin: Point = { x: 0, y: 0 }): Aabb {
+    const { x: ox, y: oy } = origin;
+    return new Aabb(
+      (this.minX - ox) * factor + ox,
+      (this.minY - oy) * factor + oy,
+      (this.maxX - ox) * factor + ox,
+      (this.maxY - oy) * factor + oy,
+    );
+  }
+
+  /**
+   * Returns the point at the given normalized coordinates.
+   * The input coordinates are in the range [0, 1].
+   *
+   * For example, (0, 0) is the top-left corner of the bounds,
+   * (1, 1) is the bottom-right corner, (0.5, 0.5) is the center.
+   */
+  pointAt({ x, y }: Point): Point {
+    const { maxX, maxY, minX, minY } = this;
+    return {
+      x: minX + (maxX - minX) * x,
+      y: minY + (maxY - minY) * y,
+    };
+  }
+
+  /**
    * Checks if one Aabb intersects another.
    */
   intersects(other: Aabb): boolean {

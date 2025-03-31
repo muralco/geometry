@@ -109,4 +109,35 @@ describe('Aabb', () => {
     expect(b1.intersection(b2).isEmpty()).toBe(true);
     expect(b1.intersects(b2)).toBe(false);
   });
+
+  it('should translate bounds', () => {
+    const bounds = Aabb.fromJSON({ maxX: 1, maxY: 3, minX: -2, minY: 0 });
+    const translatedBounds = bounds.translate({ x: 1, y: 2 });
+    expect(translatedBounds).toEqual(
+      Aabb.fromJSON({ maxX: 2, maxY: 5, minX: -1, minY: 2 }),
+    );
+  });
+
+  it('should scale bounds', () => {
+    const bounds = Aabb.fromJSON({ maxX: 1, maxY: 3, minX: -2, minY: 0 });
+    const scaledBounds = bounds.scale(2);
+    expect(scaledBounds).toEqual(
+      Aabb.fromJSON({ maxX: 2, maxY: 6, minX: -4, minY: 0 }),
+    );
+  });
+
+  it('should scale with provided origin', () => {
+    const bounds = Aabb.fromJSON({ maxX: 1, maxY: 3, minX: -2, minY: 0 });
+    const scaledBounds = bounds.scale(2, { x: 1, y: 1 });
+    expect(scaledBounds).toEqual(
+      Aabb.fromJSON({ maxX: 1, maxY: 5, minX: -5, minY: -1 }),
+    );
+  });
+
+  it('should return valid point at normalized coordinates', () => {
+    const bounds = Aabb.fromJSON({ maxX: 1, maxY: 3, minX: -2, minY: 0 });
+    expect(bounds.pointAt({ x: 0.5, y: 0.5 })).toEqual({ x: -0.5, y: 1.5 });
+    expect(bounds.pointAt({ x: 0, y: 0 })).toEqual({ x: -2, y: 0 });
+    expect(bounds.pointAt({ x: -1, y: 2 })).toEqual({ x: -5, y: 6 });
+  });
 });
