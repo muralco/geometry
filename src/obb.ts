@@ -131,13 +131,19 @@ export namespace Obb {
     return Obb.mapToLocal(to, Obb.mapToGlobal(from, point));
   }
 
+  /**
+   * Checks if a point is inside an oriented bounding box
+   * @param obb
+   * @param point Point in global mural coordinates
+   * @param padding By this amount bounds will be shrunk. Padding can be negative.
+   */
   export function containsPoint(obb: Obb, point: Point, padding = 0): boolean {
     const localPoint = Obb.mapToLocal(obb, point);
     return (
-      localPoint.x >= -padding &&
-      localPoint.x <= obb.size.width + padding &&
-      localPoint.y >= -padding &&
-      localPoint.y <= obb.size.height + padding
+      localPoint.x >= padding &&
+      localPoint.x <= obb.size.width - padding &&
+      localPoint.y >= padding &&
+      localPoint.y <= obb.size.height - padding
     );
   }
 
