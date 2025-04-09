@@ -147,6 +147,42 @@ export namespace Obb {
     );
   }
 
+  export function expand(
+    { size: { height, width }, space }: Obb,
+    padding: number,
+  ): Obb {
+    const [
+      {
+        cosR,
+        origin: { x, y },
+        sinR,
+      },
+      ...rest
+    ] = space;
+
+    const dx = -padding * (cosR - sinR);
+    const dy = -padding * (sinR + cosR);
+
+    return {
+      size: {
+        height: height + padding * 2,
+        width: width + padding * 2,
+      },
+      space: [
+        {
+          cosR,
+          origin: { x: x - dx, y: y - dy },
+          sinR,
+        },
+        ...rest,
+      ],
+    };
+  }
+
+  export function shrink(obb: Obb, padding: number): Obb {
+    return expand(obb, -padding);
+  }
+
   /**
    * Takes an oriented bounding box and returns the global
    * axis aligned bounding box
