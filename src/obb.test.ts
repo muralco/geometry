@@ -189,20 +189,20 @@ describe('Obb', () => {
     });
   });
 
-  describe('containsPoint', () => {
+  describe('includesPoint', () => {
     it('should check if point is inside of the Obb', () => {
-      expect(Obb.containsPoint(identityObb, { x: 50, y: 100 })).toBe(true);
-      expect(Obb.containsPoint(identityObb, { x: 150, y: 100 })).toBe(false);
+      expect(Obb.includesPoint(identityObb, { x: 50, y: 100 })).toBe(true);
+      expect(Obb.includesPoint(identityObb, { x: 150, y: 100 })).toBe(false);
     });
 
     it('should check if point is inside of the rotated Obb', () => {
-      expect(Obb.containsPoint(rotatedObb, { x: -10, y: 50 })).toBe(true);
-      expect(Obb.containsPoint(rotatedObb, { x: 100, y: 50 })).toBe(false);
+      expect(Obb.includesPoint(rotatedObb, { x: -10, y: 50 })).toBe(true);
+      expect(Obb.includesPoint(rotatedObb, { x: 100, y: 50 })).toBe(false);
     });
 
     it('should check if point is inside of the Obb with padding', () => {
-      expect(Obb.containsPoint(identityObb, { x: 99, y: 199 }, 10)).toBe(false);
-      expect(Obb.containsPoint(identityObb, { x: 101, y: 201 }, -10)).toBe(
+      expect(Obb.includesPoint(identityObb, { x: 99, y: 199 }, 10)).toBe(false);
+      expect(Obb.includesPoint(identityObb, { x: 101, y: 201 }, -10)).toBe(
         true,
       );
     });

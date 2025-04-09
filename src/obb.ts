@@ -137,7 +137,7 @@ export namespace Obb {
    * @param point Point in global mural coordinates
    * @param padding By this amount bounds will be shrunk. Padding can be negative.
    */
-  export function containsPoint(obb: Obb, point: Point, padding = 0): boolean {
+  export function includesPoint(obb: Obb, point: Point, padding = 0): boolean {
     const localPoint = Obb.mapToLocal(obb, point);
     return (
       localPoint.x >= padding &&
