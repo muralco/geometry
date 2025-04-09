@@ -209,4 +209,41 @@ describe('Obb', () => {
       ).toBe(true);
     });
   });
+
+  describe('expand', () => {
+    it('should expand the Obb by a given padding', () => {
+      const expandedObb = Obb.expand(identityObb, 10);
+      expect(expandedObb).toEqual({
+        size: { height: 220, width: 120 },
+        space: [{ cosR: 1, origin: { x: -10, y: -10 }, sinR: 0 }],
+      });
+    });
+
+    it('should shrink if negative padding is provided', () => {
+      const expandedObb = Obb.expand(identityObb, -10);
+      expect(expandedObb).toEqual({
+        size: { height: 180, width: 80 },
+        space: [{ cosR: 1, origin: { x: 10, y: 10 }, sinR: 0 }],
+      });
+    });
+
+    it('should expand rotated Obb correctly', () => {
+      const expandedObb = Obb.expand(rotatedObb, 10);
+      expect(expandedObb).toEqual({
+        size: { height: 220, width: 120 },
+        space: [{ cosR: 0, origin: { x: 10, y: -10 }, sinR: 1 }],
+      });
+    });
+
+    it('should expand complex Obb correctly', () => {
+      const expandedObb = Obb.expand(complexObb, 10);
+      expect(expandedObb).toEqual({
+        size: { height: 220, width: 120 },
+        space: [
+          { cosR: 0.866, origin: { x: 96.34, y: 86.34 }, sinR: 0.5 },
+          { cosR: 1, origin: { x: 50, y: 50 }, sinR: 0 },
+        ],
+      });
+    });
+  });
 });

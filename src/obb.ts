@@ -170,7 +170,7 @@ export namespace Obb {
       space: [
         {
           cosR,
-          origin: { x: x - dx, y: y - dy },
+          origin: { x: x + dx, y: y + dy },
           sinR,
         },
         ...rest,
