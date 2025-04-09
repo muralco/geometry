@@ -188,4 +188,23 @@ describe('Obb', () => {
       expect(result).toEqual(new Aabb(-200, 0, 0, 100));
     });
   });
+
+  describe('containsPoint', () => {
+    it('should check if point is inside of the Obb', () => {
+      expect(Obb.containsPoint(identityObb, { x: 50, y: 100 })).toBe(true);
+      expect(Obb.containsPoint(identityObb, { x: 150, y: 100 })).toBe(false);
+    });
+
+    it('should check if point is inside of the rotated Obb', () => {
+      expect(Obb.containsPoint(rotatedObb, { x: -10, y: 50 })).toBe(true);
+      expect(Obb.containsPoint(rotatedObb, { x: 100, y: 50 })).toBe(false);
+    });
+
+    it('should check if point is inside of the Obb with padding', () => {
+      expect(Obb.containsPoint(identityObb, { x: 99, y: 199 }, 10)).toBe(false);
+      expect(Obb.containsPoint(identityObb, { x: 101, y: 201 }, -10)).toBe(
+        true,
+      );
+    });
+  });
 });
