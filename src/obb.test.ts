@@ -201,10 +201,12 @@ describe('Obb', () => {
     });
 
     it('should check if point is inside of the Obb with padding', () => {
-      expect(Obb.includesPoint(identityObb, { x: 99, y: 199 }, 10)).toBe(false);
-      expect(Obb.includesPoint(identityObb, { x: 101, y: 201 }, -10)).toBe(
-        true,
-      );
+      expect(
+        Obb.includesPoint(Obb.shrink(identityObb, 10), { x: 99, y: 199 }),
+      ).toBe(false);
+      expect(
+        Obb.includesPoint(Obb.expand(identityObb, 10), { x: 101, y: 201 }),
+      ).toBe(true);
     });
   });
 });
