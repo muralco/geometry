@@ -131,6 +131,16 @@ export namespace Obb {
     return Obb.mapToLocal(to, Obb.mapToGlobal(from, point));
   }
 
+  export function containsPoint(obb: Obb, point: Point, padding = 0): boolean {
+    const localPoint = Obb.mapToLocal(obb, point);
+    return (
+      localPoint.x >= -padding &&
+      localPoint.x <= obb.size.width + padding &&
+      localPoint.y >= -padding &&
+      localPoint.y <= obb.size.height + padding
+    );
+  }
+
   /**
    * Takes an oriented bounding box and returns the global
    * axis aligned bounding box
