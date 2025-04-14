@@ -102,6 +102,13 @@ export namespace Obb {
     );
   }
 
+  export function translate(obb: Obb, delta: Point): Obb {
+    return {
+      size: obb.size,
+      space: obb.space.translate(delta),
+    };
+  }
+
   export function expand(
     { size: { height, width }, space }: Obb,
     padding: number,
