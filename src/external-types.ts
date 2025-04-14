@@ -8,3 +8,9 @@ export type Bbox = {
   y: number;
   y1: number;
 };
+
+// TODO: Move 'Size' to this package from '@muralco/types'
+export type Size = {
+  height: number;
+  width: number;
+};

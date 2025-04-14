@@ -1,30 +1,35 @@
 import { Aabb } from './aabb';
 import { Point } from './external-types';
+import { Matrix } from './matrix';
 import { Obb } from './obb';
 
 describe('Obb', () => {
   // Sample Obb objects for testing
   const identityObb: Obb = {
     size: { height: 200, width: 100 },
-    space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
+    space: Matrix.identity(),
   };
 
   const translatedObb: Obb = {
     size: { height: 200, width: 100 },
-    space: [{ cosR: 1, origin: { x: 100, y: 200 }, sinR: 0 }],
+    space: Matrix.translation(100, 200),
   };
 
   const rotatedObb: Obb = {
     size: { height: 200, width: 100 },
-    space: [{ cosR: 0, origin: { x: 0, y: 0 }, sinR: 1 }], // 90 degrees rotation
+    space: Matrix.rotation(Math.PI / 2),
   };
 
   const complexObb: Obb = {
     size: { height: 200, width: 100 },
-    space: [
-      { cosR: 0.866, origin: { x: 100, y: 100 }, sinR: 0.5 }, // 30 degrees rotation
-      { cosR: 1, origin: { x: 50, y: 50 }, sinR: 0 }, // translation
-    ],
+    space: Matrix.identity()
+      .rotate(30 * (Math.PI / 180))
+      .translate(50, 50),
+  };
+
+  const complexObbParent = {
+    size: { height: 100, width: 100 },
+    space: Matrix.identity().translate(10, 10),
   };
 
   describe('scalePoint', () => {
@@ -32,11 +37,11 @@ describe('Obb', () => {
       const point: Point = { x: 50, y: 100 };
       const prevObb: Obb = {
         size: { height: 200, width: 100 },
-        space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
+        space: Matrix.identity(),
       };
       const nextObb: Obb = {
         size: { height: 400, width: 200 },
-        space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
+        space: Matrix.identity(),
       };
 
       const result = Obb.scalePoint(prevObb, point, nextObb);
@@ -48,11 +53,11 @@ describe('Obb', () => {
       const point: Point = { x: 50, y: 100 };
       const prevObb: Obb = {
         size: { height: 0, width: 0 },
-        space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
+        space: Matrix.identity(),
       };
       const nextObb: Obb = {
         size: { height: 400, width: 200 },
-        space: [{ cosR: 1, origin: { x: 0, y: 0 }, sinR: 0 }],
+        space: Matrix.identity(),
       };
 
       const result = Obb.scalePoint(prevObb, point, nextObb);
@@ -63,33 +68,13 @@ describe('Obb', () => {
 
   describe('getLocalPosition', () => {
     it('should return the origin of the first space', () => {
-      const result = Obb.getLocalPosition(translatedObb);
+      const result = Obb.getLocalPosition(translatedObb, undefined);
       expect(result).toEqual({ x: 100, y: 200 });
     });
 
     it('should return the correct origin for complex Obb', () => {
-      const result = Obb.getLocalPosition(complexObb);
-      expect(result).toEqual({ x: 100, y: 100 });
-    });
-  });
-
-  describe('getTotalCosSin', () => {
-    it('should return identity for identity Obb', () => {
-      const result = Obb.getTotalCosSin(identityObb);
-      expect(result.cosR).toBeCloseTo(1);
-      expect(result.sinR).toBeCloseTo(0);
-    });
-
-    it('should return correct values for rotated Obb', () => {
-      const result = Obb.getTotalCosSin(rotatedObb);
-      expect(result.cosR).toBeCloseTo(0);
-      expect(result.sinR).toBeCloseTo(1);
-    });
-
-    it('should compose multiple transformations correctly', () => {
-      const result = Obb.getTotalCosSin(complexObb);
-      expect(result.cosR).toBeCloseTo(0.866, 3);
-      expect(result.sinR).toBeCloseTo(0.5, 3);
+      const result = Obb.getLocalPosition(complexObb, complexObbParent);
+      expect(result).toEqual({ x: 40, y: 40 });
     });
   });
 
@@ -185,7 +170,7 @@ describe('Obb', () => {
     it('should handle rotated Obb conversion to Aabb', () => {
       const result = Obb.toAabb(rotatedObb);
 
-      expect(result).toEqual(new Aabb(-200, 0, 0, 100));
+      expect(result.round()).toEqual(new Aabb(-200, 0, 0.01, 100.01));
     });
   });
 
@@ -213,37 +198,28 @@ describe('Obb', () => {
   describe('expand', () => {
     it('should expand the Obb by a given padding', () => {
       const expandedObb = Obb.expand(identityObb, 10);
-      expect(expandedObb).toEqual({
-        size: { height: 220, width: 120 },
-        space: [{ cosR: 1, origin: { x: -10, y: -10 }, sinR: 0 }],
-      });
+      expect(Obb.toAabb(expandedObb)).toEqual(
+        Aabb.fromLtrb(-10, -10, 110, 210),
+      );
     });
 
     it('should shrink if negative padding is provided', () => {
       const expandedObb = Obb.expand(identityObb, -10);
-      expect(expandedObb).toEqual({
-        size: { height: 180, width: 80 },
-        space: [{ cosR: 1, origin: { x: 10, y: 10 }, sinR: 0 }],
-      });
+      expect(Obb.toAabb(expandedObb)).toEqual(new Aabb(10, 10, 90, 190));
     });
 
     it('should expand rotated Obb correctly', () => {
       const expandedObb = Obb.expand(rotatedObb, 10);
-      expect(expandedObb).toEqual({
-        size: { height: 220, width: 120 },
-        space: [{ cosR: 0, origin: { x: 10, y: -10 }, sinR: 1 }],
-      });
+      expect(Obb.toAabb(expandedObb).round()).toEqual(
+        new Aabb(-210, -10, 10.01, 110.01),
+      );
     });
 
     it('should expand complex Obb correctly', () => {
       const expandedObb = Obb.expand(complexObb, 10);
-      expect(expandedObb).toEqual({
-        size: { height: 220, width: 120 },
-        space: [
-          { cosR: 0.866, origin: { x: 96.34, y: 86.34 }, sinR: 0.5 },
-          { cosR: 1, origin: { x: 50, y: 50 }, sinR: 0 },
-        ],
-      });
+      expect(Obb.toAabb(expandedObb).round()).toEqual(
+        Aabb.fromLtrb(-13.67, 86.33, 200.27, 336.87),
+      );
     });
   });
 });

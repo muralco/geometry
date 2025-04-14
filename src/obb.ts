@@ -1,13 +1,17 @@
 import { Aabb } from './aabb';
-import { Point } from './external-types';
+import { Point, Size } from './external-types';
+import { Matrix } from './matrix';
 
 /**
  * Oriented Bounding Box
  * Representation of a coordinate system inside Mural
  */
 export interface Obb {
-  size: { height: number; width: number };
-  space: { cosR: number; origin: { x: number; y: number }; sinR: number }[];
+  size: Size;
+  /**
+   * Transformation from local space to global
+   */
+  space: Matrix;
 }
 
 export namespace Obb {
@@ -36,51 +40,26 @@ export namespace Obb {
   /**
    * Returns the local position of a Obb
    * @param obb
+   * @param parentObb
    * @returns
    */
-  export function getLocalPosition(obb: Obb): Point {
-    return obb.space[0].origin;
-  }
-
-  // the angle sum rule
-  // cos(α+β) = cos(α).cos(β)−sin(α).sin(β)
-  // sin(α+β) = sin(α).cos(β)+cos(α).sin(β)
-  export function getTotalCosSin(obb: Obb): { cosR: number; sinR: number } {
-    return obb.space.reduce(
-      (acc, curr) => {
-        return {
-          cosR: acc.cosR * curr.cosR - acc.sinR * curr.sinR,
-          sinR: acc.sinR * curr.cosR + acc.cosR * curr.sinR,
-        };
-      },
-      { cosR: 1, sinR: 0 },
-    );
+  export function getLocalPosition(
+    obb: Obb,
+    parentObb: Obb | undefined,
+  ): Point {
+    return parentObb
+      ? mapTo(obb, parentObb, { x: 0, y: 0 })
+      : mapToGlobal(obb, { x: 0, y: 0 });
   }
 
   /**
    * Maps a point in vector space to the global vector space
    * @param localPoint
-   * @param from
+   * @param obb
    * @returns
    */
-  export function mapToGlobal(from: Obb, localPoint: Point): Point {
-    const copy = { ...localPoint };
-    return from.space.reduce((accumulator, current) => {
-      // ┌           ┐┌                    ┐┌   ┐
-      // │ 1   0   j ││ cos(r)  -sin(r)  0 ││ x │
-      // │ 0   1   k ││ sin(r)   cos(r)  0 ││ y │
-      // │ 0   0   1 ││   0        0     1 ││ 1 │
-      // └           ┘└                    ┘└   ┘
-      const cosR = current.cosR;
-      const sinR = current.sinR;
-      const j = current.origin.x;
-      const k = current.origin.y;
-      const x = accumulator.x;
-      const y = accumulator.y;
-      copy.x = j + x * cosR - y * sinR;
-      copy.y = k + x * sinR + y * cosR;
-      return copy;
-    }, copy);
+  export function mapToGlobal(obb: Obb, localPoint: Point): Point {
+    return obb.space.transform(localPoint);
   }
 
   /**
@@ -92,32 +71,12 @@ export namespace Obb {
 
   /**
    * Maps a point in the global vector space to a local vector space
-   * @param to
+   * @param obb
    * @param globalPoint
    * @returns
    */
-  export function mapToLocal(to: Obb, globalPoint: Point): Point {
-    const copy = { ...globalPoint };
-    return to.space.reduceRight((accumulator, current) => {
-      // ┌                    ┐┌            ┐┌   ┐
-      // │  cos(r)  sin(r)  0 ││ 1   0   -j ││ x │
-      // │ -sin(r)  cos(r)  0 ││ 0   1   -k ││ y │
-      // │    0       0     1 ││ 0   0    1 ││ 1 │
-      // └                    ┘└            ┘└   ┘
-      const cosR = current.cosR;
-      const sinR = current.sinR;
-      const j = current.origin.x;
-      const k = current.origin.y;
-      const x = accumulator.x;
-      const y = accumulator.y;
-      // return {
-      //   x: -j * cosR + x * cosR - k * sinR + y * sinR,
-      //   y: -k * cosR + y * cosR + j * sinR - x * sinR,
-      // };
-      copy.x = cosR * (x - j) + sinR * (y - k);
-      copy.y = cosR * (y - k) + sinR * (j - x);
-      return copy;
-    }, globalPoint);
+  export function mapToLocal(obb: Obb, globalPoint: Point): Point {
+    return obb.space.inverse().transform(globalPoint);
   }
 
   /**
@@ -150,31 +109,14 @@ export namespace Obb {
     { size: { height, width }, space }: Obb,
     padding: number,
   ): Obb {
-    const [
-      {
-        cosR,
-        origin: { x, y },
-        sinR,
-      },
-      ...rest
-    ] = space;
-
-    const dx = -padding * (cosR - sinR);
-    const dy = -padding * (sinR + cosR);
+    const { x: dx, y: dy } = space.transform({ x: -padding, y: -padding });
 
     return {
       size: {
         height: height + padding * 2,
         width: width + padding * 2,
       },
-      space: [
-        {
-          cosR,
-          origin: { x: x + dx, y: y + dy },
-          sinR,
-        },
-        ...rest,
-      ],
+      space: space.translate(dx, dy),
     };
   }
 

@@ -187,11 +187,12 @@ export class Aabb {
    */
   round(precision = 2): Aabb {
     const multiplier = 10 ** precision;
+    const demultiplier = 1 / multiplier;
     return new Aabb(
-      Math.floor(this.minX * multiplier) / multiplier,
-      Math.floor(this.minY * multiplier) / multiplier,
-      Math.ceil(this.maxX * multiplier) / multiplier,
-      Math.ceil(this.maxY * multiplier) / multiplier,
+      Math.floor(this.minX * multiplier) * demultiplier,
+      Math.floor(this.minY * multiplier) * demultiplier,
+      Math.ceil(this.maxX * multiplier) * demultiplier,
+      Math.ceil(this.maxY * multiplier) * demultiplier,
     );
   }
 
