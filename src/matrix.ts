@@ -65,7 +65,13 @@ export class Matrix {
    */
   translate(delta: Point): Matrix {
     if (delta.x === 0 && delta.y === 0) return this;
-    return this.then(Matrix.translation(delta));
+
+    const data = new Float32Array(this.data);
+
+    data[4] += delta.x;
+    data[5] += delta.y;
+
+    return new Matrix(data);
   }
 
   /**
