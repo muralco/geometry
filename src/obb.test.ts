@@ -12,7 +12,7 @@ describe('Obb', () => {
 
   const translatedObb: Obb = {
     size: { height: 200, width: 100 },
-    space: Matrix.translation(100, 200),
+    space: Matrix.translation({ x: 100, y: 200 }),
   };
 
   const rotatedObb: Obb = {
@@ -68,7 +68,7 @@ describe('Obb', () => {
 
   describe('getLocalPosition', () => {
     it('should return the origin of the first space', () => {
-      const result = Obb.getLocalPosition(translatedObb, undefined);
+      const result = Obb.getLocalPosition(translatedObb, Obb.root());
       expect(result).toEqual({ x: 100, y: 200 });
     });
 
