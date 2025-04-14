@@ -63,9 +63,9 @@ export class Matrix {
   /**
    * Create translation matrix and multiply it with the current matrix.
    */
-  translate(tx: number, ty: number): Matrix {
-    if (tx === 0 && ty === 0) return this;
-    return this.then(Matrix.translation(tx, ty));
+  translate(delta: Point): Matrix {
+    if (delta.x === 0 && delta.y === 0) return this;
+    return this.then(Matrix.translation(delta));
   }
 
   /**
@@ -110,6 +110,30 @@ export class Matrix {
     );
   }
 
+  /**
+   * Returns true, if the other matrix is a translated version of this matrix.
+   */
+  isTranslationOf(other: Matrix): boolean {
+    const m0 = this.data;
+    const m1 = other.data;
+    return (
+      m0[0] === m1[0] && m0[1] === m1[1] && m0[3] === m1[3] && m0[4] === m1[4]
+    );
+  }
+
+  equals(other: Matrix): boolean {
+    const m0 = this.data;
+    const m1 = other.data;
+    return (
+      m0[0] === m1[0] &&
+      m0[1] === m1[1] &&
+      m0[2] === m1[2] &&
+      m0[3] === m1[3] &&
+      m0[4] === m1[4] &&
+      m0[5] === m1[5]
+    );
+  }
+
   toString(): string {
     const [a, b, c, d, e, f] = this.data;
     return `[[${a}, ${c}, ${e}], [${b}, ${d}, ${f}], [0, 0, 1]]`;
@@ -119,8 +143,8 @@ export class Matrix {
     return new Matrix(new Float32Array([1, 0, 0, 1, 0, 0]));
   }
 
-  static translation(tx: number, ty: number): Matrix {
-    return new Matrix(new Float32Array([1, 0, 0, 1, tx, ty]));
+  static translation({ x, y }: Point): Matrix {
+    return new Matrix(new Float32Array([1, 0, 0, 1, x, y]));
   }
 
   static rotation(theta: number): Matrix {

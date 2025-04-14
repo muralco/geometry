@@ -24,12 +24,12 @@ describe('Obb', () => {
     size: { height: 200, width: 100 },
     space: Matrix.identity()
       .rotate(30 * (Math.PI / 180))
-      .translate(50, 50),
+      .translate({ x: 50, y: 50 }),
   };
 
   const complexObbParent = {
     size: { height: 100, width: 100 },
-    space: Matrix.identity().translate(10, 10),
+    space: Matrix.identity().translate({ x: 10, y: 10 }),
   };
 
   describe('scalePoint', () => {

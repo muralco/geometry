@@ -43,10 +43,7 @@ export namespace Obb {
    * @param parentObb
    * @returns
    */
-  export function getLocalPosition(
-    obb: Obb,
-    parentObb: Obb | undefined,
-  ): Point {
+  export function getLocalPosition(obb: Obb, parentObb: Obb): Point {
     return parentObb
       ? mapTo(obb, parentObb, { x: 0, y: 0 })
       : mapToGlobal(obb, { x: 0, y: 0 });
@@ -109,14 +106,14 @@ export namespace Obb {
     { size: { height, width }, space }: Obb,
     padding: number,
   ): Obb {
-    const { x: dx, y: dy } = space.transform({ x: -padding, y: -padding });
+    const delta = space.transform({ x: -padding, y: -padding });
 
     return {
       size: {
         height: height + padding * 2,
         width: width + padding * 2,
       },
-      space: space.translate(dx, dy),
+      space: space.translate(delta),
     };
   }
 
@@ -139,5 +136,20 @@ export namespace Obb {
         { x: obb.size.width, y: obb.size.height },
       ].map(p => Obb.mapToGlobal(obb, p)),
     );
+  }
+
+  export function create(size: Size, space: Matrix): Obb {
+    return {
+      size,
+      space,
+    };
+  }
+
+  /**
+   * Zero sized obb, placed at the origin.
+   * Can be used as a default value when there is no parent Obb.
+   */
+  export function root(): Obb {
+    return create({ height: 0, width: 0 }, Matrix.identity());
   }
 }

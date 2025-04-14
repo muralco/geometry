@@ -15,7 +15,7 @@ describe('Matrix', () => {
   });
 
   it('should create a translation matrix', () => {
-    const matrix = Matrix.translation(10, 20);
+    const matrix = Matrix.translation({ x: 10, y: 20 });
     expect(matrix.transform({ x: 100, y: 20 })).toEqual({ x: 110, y: 40 });
   });
 
@@ -29,7 +29,7 @@ describe('Matrix', () => {
 
   it('should chain transformations', () => {
     const matrix = Matrix.identity()
-      .translate(10, 20)
+      .translate({ x: 10, y: 20 })
       .rotate(Math.PI / 2)
       .scale(2);
 
@@ -41,7 +41,7 @@ describe('Matrix', () => {
 
   it('should inverse a matrix', () => {
     const matrix = Matrix.identity()
-      .translate(10, 20)
+      .translate({ x: 10, y: 20 })
       .rotate(Math.PI / 2)
       .scale(2);
 
