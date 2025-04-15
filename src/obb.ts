@@ -113,7 +113,13 @@ export namespace Obb {
     { size: { height, width }, space }: Obb,
     padding: number,
   ): Obb {
-    const delta = space.transform({ x: -padding, y: -padding });
+    const origin = space.transform({ x: 0, y: 0 });
+    const target = space.transform({ x: -padding, y: -padding });
+
+    const delta = {
+      x: target.x - origin.x,
+      y: target.y - origin.y,
+    };
 
     return {
       size: {

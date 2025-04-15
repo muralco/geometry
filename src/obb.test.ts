@@ -218,7 +218,7 @@ describe('Obb', () => {
     it('should expand complex Obb correctly', () => {
       const expandedObb = Obb.expand(complexObb, 10);
       expect(Obb.toAabb(expandedObb).round()).toEqual(
-        Aabb.fromLtrb(-13.67, 86.33, 200.27, 336.87),
+        Aabb.fromLtrb(-63.67, 36.33, 150.27, 286.87),
       );
     });
   });
