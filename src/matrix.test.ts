@@ -52,4 +52,9 @@ describe('Matrix', () => {
       y: 20,
     });
   });
+
+  it('should create a valid CSS string', () => {
+    const matrix = Matrix.translation({ x: 60, y: 20 });
+    expect(matrix.toCss()).toEqual('matrix(1, 0, 0, 1, 60, 20)');
+  });
 });

@@ -145,6 +145,15 @@ export class Matrix {
     return `[[${a}, ${c}, ${e}], [${b}, ${d}, ${f}], [0, 0, 1]]`;
   }
 
+  /**
+   * Returns a CSS string representation of the matrix.
+   * Don't forget to use `transform-origin` to set the origin of the transformation.
+   */
+  toCss(): string {
+    const [a, b, c, d, e, f] = this.data;
+    return `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`;
+  }
+
   static identity(): Matrix {
     return new Matrix(new Float32Array([1, 0, 0, 1, 0, 0]));
   }
