@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Rect } from '@muralco/types';
 import { Bbox, Point } from './external-types';
+import { Matrix } from './matrix';
 
 interface AabbData {
   maxX: number;
@@ -284,6 +285,20 @@ export class Aabb {
    */
   shrink(amount: number): Aabb {
     return this.expand(-amount);
+  }
+
+  /**
+   * Transform corner points and return their Aabb.
+   */
+  transform(matrix: Matrix): Aabb {
+    return Aabb.fromPoints(
+      [
+        { x: this.minX, y: this.minY },
+        { x: this.maxX, y: this.minY },
+        { x: this.minX, y: this.maxY },
+        { x: this.maxX, y: this.maxY },
+      ].map(point => matrix.transform(point)),
+    );
   }
 
   /**
