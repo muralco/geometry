@@ -53,12 +53,12 @@ describe('Obb', () => {
 
   describe('getLocalPosition', () => {
     it('should return the origin of the first space', () => {
-      const result = translatedObb.getLocalPosition(Obb.root());
+      const result = translatedObb.mapOriginTo(Obb.root());
       expect(result).toEqual({ x: 100, y: 200 });
     });
 
     it('should return the correct origin for complex Obb', () => {
-      const result = complexObb.getLocalPosition(complexObbParent);
+      const result = complexObb.mapOriginTo(complexObbParent);
       expect(result).toEqual({ x: 40, y: 40 });
     });
   });

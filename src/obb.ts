@@ -117,7 +117,7 @@ export class Obb {
   /**
    * Returns the local position of a Obb
    */
-  getLocalPosition(parentObb: Obb | undefined): Point {
+  mapOriginTo(parentObb: Obb | undefined): Point {
     return parentObb
       ? this.mapTo(parentObb, { x: 0, y: 0 })
       : this.mapToGlobal({ x: 0, y: 0 });
