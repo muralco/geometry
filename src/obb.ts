@@ -13,6 +13,13 @@ export class Obb {
     return this.size.height;
   }
 
+  getGlobalCenter(): Point {
+    return this.space.transform({
+      x: this.size.width * 0.5,
+      y: this.size.height * 0.5,
+    });
+  }
+
   /**
    * Maps a point in vector space to the global vector space
    */
