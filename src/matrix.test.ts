@@ -57,4 +57,48 @@ describe('Matrix', () => {
     const matrix = Matrix.translation({ x: 60, y: 20 });
     expect(matrix.toCss()).toEqual('matrix(1, 0, 0, 1, 60, 20)');
   });
+
+  describe('isTranslationOf', () => {
+    it('should return false for equal matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = Matrix.identity();
+
+      expect(matrix1.isTranslationOf(matrix2)).toBe(false);
+    });
+
+    it('should return true for translated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = Matrix.translation({ x: 10, y: 20 });
+
+      expect(matrix1.isTranslationOf(matrix2)).toBe(true);
+    });
+
+    it('should return false for scaled matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(2, 2);
+
+      expect(matrix1.isTranslationOf(matrix2)).toBe(false);
+    });
+
+    it('should return false for rotated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.rotate(Math.PI / 4);
+
+      expect(matrix1.isTranslationOf(matrix2)).toBe(false);
+    });
+
+    it('should return true for rotated and translated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.rotate(Math.PI / 4).translate({ x: 10, y: 20 });
+
+      expect(matrix1.isTranslationOf(matrix2)).toBe(true);
+    });
+
+    it('should return true for scaled and translated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(2, 2).translate({ x: 10, y: 20 });
+
+      expect(matrix1.isTranslationOf(matrix2)).toBe(true);
+    });
+  });
 });
