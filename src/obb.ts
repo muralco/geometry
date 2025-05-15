@@ -145,9 +145,9 @@ export class Obb {
 
   hasScaling(other: Obb): boolean {
     return (
-      this.space.hasScaling(other.space) ||
       this.size.width !== other.size.width ||
-      this.size.height !== other.size.height
+      this.size.height !== other.size.height ||
+      this.space.hasScaling(other.space)
     );
   }
 
