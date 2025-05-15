@@ -122,7 +122,9 @@ export class Matrix {
   isTranslationOf(other: Matrix): boolean {
     const m0 = this.data;
     const m1 = other.data;
-    return m0[4] !== m1[4] || m0[5] !== m1[5];
+    return (
+      m0[0] === m1[0] && m0[1] === m1[1] && m0[2] === m1[2] && m0[3] === m1[3]
+    );
   }
 
   equals(other: Matrix): boolean {
