@@ -1,5 +1,7 @@
 import { Point } from './external-types';
 
+const DEFAULT_ROTATION_DETECTION_PRECISION = 4;
+
 /**
  * 2D transformation matrix.
  *
@@ -118,12 +120,37 @@ export class Matrix {
 
   /**
    * Returns true, if the other matrix is a translated version of this matrix.
+   * Scaling and rotation should be the same as the original matrix.
    */
   isTranslationOf(other: Matrix): boolean {
     const m0 = this.data;
     const m1 = other.data;
     return (
       m0[0] === m1[0] && m0[1] === m1[1] && m0[2] === m1[2] && m0[3] === m1[3]
+    );
+  }
+
+  /**
+   * Returns true if there is no skewing or rotation in the matrix.
+   */
+  hasRotation(
+    other: Matrix,
+    precision = DEFAULT_ROTATION_DETECTION_PRECISION,
+  ): boolean {
+    if (this.isTranslationOf(other)) return false;
+
+    const m0 = this.data;
+    const m1 = other.data;
+
+    const tanX =
+      (m0[0] * m1[2] - m0[2] * m1[0]) / (m0[0] * m1[0] + m0[2] * m1[2]);
+    const tanY =
+      (m0[1] * m1[3] - m0[3] * m1[1]) / (m0[1] * m1[1] + m0[3] * m1[3]);
+
+    const multiplier = 10 ** precision;
+
+    return (
+      Math.round(tanX * multiplier) !== 0 || Math.round(tanY * multiplier) !== 0
     );
   }
 

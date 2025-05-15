@@ -102,4 +102,76 @@ describe('Matrix', () => {
       expect(matrix1.isTranslationOf(matrix2)).toBe(false);
     });
   });
+
+  describe('hasRotation', () => {
+    it('should return false for equal matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = Matrix.identity();
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return false for translated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.translate({ x: 10, y: 20 });
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return false for scaled matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(2, 2);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return false for non-proportionally scaled matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(2, 4);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return false for non-integer scaled matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(Math.PI, Math.E);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return false for negative scaled matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(2, -1);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return false for scaled and translated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.scale(2, 2).translate({ x: 10, y: 5 });
+
+      expect(matrix1.hasRotation(matrix2)).toBe(false);
+    });
+
+    it('should return true for rotated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.rotate(Math.PI / 3);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(true);
+    });
+
+    it('should return true for slightly rotated matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.rotate(Math.PI / 100);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(true);
+    });
+
+    it('should return true for rotated and scaled matrices', () => {
+      const matrix1 = Matrix.identity();
+      const matrix2 = matrix1.rotate(Math.PI / 5).scale(0.1, 0.7);
+
+      expect(matrix1.hasRotation(matrix2)).toBe(true);
+    });
+  });
 });
