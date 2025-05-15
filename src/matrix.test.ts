@@ -197,7 +197,7 @@ describe('Matrix', () => {
       expect(matrix1.hasScaling(matrix2)).toBe(false);
     });
 
-    it('should return false for scaled and translated matrices', () => {
+    it('should return false for rotated and translated matrices', () => {
       const matrix1 = Matrix.identity();
       const matrix2 = matrix1.rotate(Math.PI / 5).translate({ x: 10, y: 5 });
 
