@@ -1,6 +1,6 @@
 import { Point } from './external-types';
 
-const DEFAULT_ROTATION_DETECTION_PRECISION = 4;
+const TRANSFORM_DETECTION_PRECISION = 4;
 
 /**
  * 2D transformation matrix.
@@ -131,11 +131,30 @@ export class Matrix {
   }
 
   /**
+   * Returns true if there is translation in the matrix.
+   * Scaling and rotation are not considered.
+   */
+  hasTranslation(
+    other: Matrix,
+    precision = TRANSFORM_DETECTION_PRECISION,
+  ): boolean {
+    const m0 = this.data;
+    const m1 = other.data;
+
+    const multiplier = 10 ** precision;
+
+    return (
+      Math.round((m0[4] - m1[4]) * multiplier) !== 0 ||
+      Math.round((m0[5] - m1[5]) * multiplier) !== 0
+    );
+  }
+
+  /**
    * Returns true if there is no skewing or rotation in the matrix.
    */
   hasRotation(
     other: Matrix,
-    precision = DEFAULT_ROTATION_DETECTION_PRECISION,
+    precision = TRANSFORM_DETECTION_PRECISION,
   ): boolean {
     if (this.isTranslationOf(other)) return false;
 
@@ -151,6 +170,32 @@ export class Matrix {
 
     return (
       Math.round(tanX * multiplier) !== 0 || Math.round(tanY * multiplier) !== 0
+    );
+  }
+
+  /**
+   * Returns true if there is scaling in the matrix.
+   */
+  hasScaling(
+    other: Matrix,
+    precision = TRANSFORM_DETECTION_PRECISION,
+  ): boolean {
+    const m0 = this.data;
+    const m1 = other.data;
+
+    // originalXVectorLength2 / transformedXVectorLength2
+    const scaleX =
+      (m0[0] * m0[0] + m0[2] * m0[2]) / (m1[0] * m1[0] + m1[2] * m1[2]);
+
+    // originalYVectorLength2 / transformedYVectorLength2
+    const scaleY =
+      (m0[1] * m0[1] + m0[3] * m0[3]) / (m1[1] * m1[1] + m1[3] * m1[3]);
+
+    const multiplier = 10 ** precision;
+
+    return (
+      Math.round((1 - scaleX) * multiplier) !== 0 ||
+      Math.round((1 - scaleY) * multiplier) !== 0
     );
   }
 

@@ -135,8 +135,20 @@ export class Obb {
     );
   }
 
+  hasTranslation(other: Obb): boolean {
+    return this.space.hasTranslation(other.space);
+  }
+
   hasRotation(other: Obb): boolean {
     return this.space.hasRotation(other.space);
+  }
+
+  hasScaling(other: Obb): boolean {
+    return (
+      this.space.hasScaling(other.space) ||
+      this.size.width !== other.size.width ||
+      this.size.height !== other.size.height
+    );
   }
 
   /**
