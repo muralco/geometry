@@ -124,6 +124,22 @@ export class Obb {
   }
 
   /**
+   * Returns true if current Obb is a translation of the other Obb.
+   * There should be no rotation or scaling.
+   */
+  isTranslationOf(other: Obb): boolean {
+    return (
+      this.space.isTranslationOf(other.space) &&
+      this.size.width === other.size.width &&
+      this.size.height === other.size.height
+    );
+  }
+
+  hasRotation(other: Obb): boolean {
+    return this.space.hasRotation(other.space);
+  }
+
+  /**
    * Scales a point inside an oriented bounding box. Very useful to
    * map points inside an obb when it's scaled
    * @param prevObb the original obb
@@ -143,5 +159,17 @@ export class Obb {
       x: (point.x / prevWidth) * nextWidth,
       y: (point.y / prevHeight) * nextHeight,
     };
+  }
+
+  equals(other: Obb): boolean {
+    return (
+      this.size.width === other.size.width &&
+      this.size.height === other.size.height &&
+      this.space.equals(other.space)
+    );
+  }
+
+  toString(): string {
+    return `Obb(${JSON.stringify(this.size)}, ${this.space})`;
   }
 }
