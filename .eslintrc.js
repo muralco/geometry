@@ -14,5 +14,6 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-namespace': 'off',
+    'no-param-reassign': 'off',
   },
 };
