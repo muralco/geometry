@@ -32,6 +32,15 @@ export class Matrix {
     };
   }
 
+  // Apply the matrix to a point in place.
+  transformInPlace(point: Point): void {
+    const m = this.data;
+    const x = point.x;
+    const y = point.y;
+    point.x = m[0] * x + m[2] * y + m[4];
+    point.y = m[1] * x + m[3] * y + m[5];
+  }
+
   multiply(matrix: Matrix): Matrix {
     const m1 = this.data;
     const m2 = matrix.data;

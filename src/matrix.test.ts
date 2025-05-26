@@ -58,6 +58,46 @@ describe('Matrix', () => {
     expect(matrix.toCss()).toEqual('matrix(1, 0, 0, 1, 60, 20)');
   });
 
+  describe('transformInPlace', () => {
+    it('should transform a point in place with identity matrix', () => {
+      const matrix = Matrix.identity();
+      const point = { x: 100, y: 20 };
+      matrix.transformInPlace(point);
+      expect(point).toEqual({ x: 100, y: 20 });
+    });
+
+    it('should transform a point in place with translation matrix', () => {
+      const matrix = Matrix.translation({ x: 10, y: 20 });
+      const point = { x: 100, y: 20 };
+      matrix.transformInPlace(point);
+      expect(point).toEqual({ x: 110, y: 40 });
+    });
+
+    it('should transform a point in place with rotation matrix', () => {
+      const matrix = Matrix.rotation(Math.PI / 2);
+      const point = { x: 100, y: 20 };
+      matrix.transformInPlace(point);
+      expect(roundPoint(point)).toEqual({
+        x: -20,
+        y: 100,
+      });
+    });
+
+    it('should transform a point in place with chained transformations', () => {
+      const matrix = Matrix.identity()
+        .translate({ x: 10, y: 20 })
+        .rotate(Math.PI / 2)
+        .scale(2);
+
+      const point = { x: 100, y: 20 };
+      matrix.transformInPlace(point);
+      expect(roundPoint(point)).toEqual({
+        x: -80,
+        y: 220,
+      });
+    });
+  });
+
   describe('isTranslationOf', () => {
     it('should return true for equal matrices', () => {
       const matrix1 = Matrix.identity();
