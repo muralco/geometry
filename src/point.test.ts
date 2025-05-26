@@ -97,6 +97,27 @@ describe('Point', () => {
       expect(Point.round({ x: 4.33, y: 3.56 }, 1)).toEqual({ x: 4.3, y: 3.6 });
       expect(Point.round({ x: 2.34, y: 3.56 }, 0)).toEqual({ x: 2, y: 4 });
     });
+
+    it('should interpolate between points correctly', () => {
+      const a = { x: 0, y: 0 };
+      const b = { x: 10, y: 20 };
+
+      // t = 0 should return the first point
+      expect(Point.lerp(a, b, 0)).toEqual({ x: 0, y: 0 });
+
+      // t = 1 should return the second point
+      expect(Point.lerp(a, b, 1)).toEqual({ x: 10, y: 20 });
+
+      // t = 0.5 should return the midpoint
+      expect(Point.lerp(a, b, 0.5)).toEqual({ x: 5, y: 10 });
+
+      // t = 0.25 should return a point 1/4 of the way from a to b
+      expect(Point.lerp(a, b, 0.25)).toEqual({ x: 2.5, y: 5 });
+
+      // t values outside [0,1] should extrapolate properly
+      expect(Point.lerp(a, b, 2)).toEqual({ x: 20, y: 40 });
+      expect(Point.lerp(a, b, -0.5)).toEqual({ x: -5, y: -10 });
+    });
   });
 
   describe('in-place operations', () => {
