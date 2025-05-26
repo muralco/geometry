@@ -32,14 +32,23 @@ export namespace Point {
     return { x: a.x - b.x, y: a.y - b.y };
   }
 
+  /**
+   * Multiplies two points component-wise.
+   */
   export function mul(a: Point, b: Point): Point {
     return { x: a.x * b.x, y: a.y * b.y };
   }
 
+  /**
+   * Divides two points component-wise.
+   */
   export function div(a: Point, b: Point): Point {
     return { x: a.x / b.x, y: a.y / b.y };
   }
 
+  /**
+   * Invert sign of each component of the point.
+   */
   export function neg(point: Point): Point {
     return { x: -point.x, y: -point.y };
   }
@@ -48,16 +57,27 @@ export namespace Point {
     return { x: point.x * sx, y: point.y * sy };
   }
 
+  /**
+   * Normalizes the point to a unit vector.
+   * This transformation keeps the direction of the point, but sets its length to 1.
+   */
   export function normalize(point: Point): Point {
     const l = length(point);
 
     return l > EPSILON ? scale(point, 1 / l) : zero();
   }
 
+  /**
+   * Calculates the dot product of two points.
+   * r = length(a) * length(b) * cos(angle)
+   */
   export function dot(a: Point, b: Point): number {
     return a.x * b.x + a.y * b.y;
   }
 
+  /**
+   * Linearly interpolates between two points.
+   */
   export function lerp(a: Point, b: Point, t: number): Point {
     return {
       x: a.x + (b.x - a.x) * t,
@@ -65,6 +85,9 @@ export namespace Point {
     };
   }
 
+  /**
+   * Returns a point with coordinates (0, 0).
+   */
   export function zero(): Point {
     return { x: 0, y: 0 };
   }
@@ -92,6 +115,8 @@ export namespace Point {
   }
 
   // In place methods that can mutate the argument to avoid extra allocations
+  // ------------------------------------------------------------------------
+
   export function addInPlace(a: Point, b: Point): void {
     a.x += b.x;
     a.y += b.y;
