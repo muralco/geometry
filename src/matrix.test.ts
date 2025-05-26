@@ -1,13 +1,6 @@
 import { Matrix } from './matrix';
 import { Point } from './point';
 
-function roundPoint({ x, y }: Point) {
-  return {
-    x: Math.round(x * 128) / 128,
-    y: Math.round(y * 128) / 128,
-  };
-}
-
 describe('Matrix', () => {
   it('should create an identity matrix', () => {
     const matrix = Matrix.identity();
@@ -21,7 +14,7 @@ describe('Matrix', () => {
 
   it('should create a rotation matrix', () => {
     const matrix = Matrix.rotation(Math.PI / 2);
-    expect(roundPoint(matrix.transform({ x: 100, y: 20 }))).toEqual({
+    expect(Point.round(matrix.transform({ x: 100, y: 20 }))).toEqual({
       x: -20,
       y: 100,
     });
@@ -33,7 +26,7 @@ describe('Matrix', () => {
       .rotate(Math.PI / 2)
       .scale(2);
 
-    expect(roundPoint(matrix.transform({ x: 100, y: 20 }))).toEqual({
+    expect(Point.round(matrix.transform({ x: 100, y: 20 }))).toEqual({
       x: -80,
       y: 220,
     });
@@ -47,7 +40,7 @@ describe('Matrix', () => {
 
     const invertedMatrix = matrix.inverse();
 
-    expect(roundPoint(invertedMatrix.transform({ x: -80, y: 220 }))).toEqual({
+    expect(Point.round(invertedMatrix.transform({ x: -80, y: 220 }))).toEqual({
       x: 100,
       y: 20,
     });
@@ -77,7 +70,7 @@ describe('Matrix', () => {
       const matrix = Matrix.rotation(Math.PI / 2);
       const point = { x: 100, y: 20 };
       matrix.transformInPlace(point);
-      expect(roundPoint(point)).toEqual({
+      expect(Point.round(point)).toEqual({
         x: -20,
         y: 100,
       });
@@ -91,7 +84,7 @@ describe('Matrix', () => {
 
       const point = { x: 100, y: 20 };
       matrix.transformInPlace(point);
-      expect(roundPoint(point)).toEqual({
+      expect(Point.round(point)).toEqual({
         x: -80,
         y: 220,
       });
