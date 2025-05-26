@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { Rect } from '@muralco/types';
+import { DEFAULT_PRECISION } from './const';
 import { Bbox } from './external-types';
 import { Matrix } from './matrix';
 import { Point } from './point';
@@ -187,7 +188,7 @@ export class Aabb {
    * The precision is the number of decimal places to round to.
    * By default, it rounds to 2 decimal places.
    */
-  round(precision = 2): Aabb {
+  round(precision = DEFAULT_PRECISION): Aabb {
     const multiplier = 10 ** precision;
     const demultiplier = 1 / multiplier;
     return new Aabb(

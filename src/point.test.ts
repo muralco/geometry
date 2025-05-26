@@ -1,4 +1,4 @@
-import { EPSILON } from './consts';
+import { EPSILON } from './const';
 import { Point } from './point';
 
 describe('Point', () => {

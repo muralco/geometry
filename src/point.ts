@@ -1,4 +1,4 @@
-import { DEFAULT_PRECISION, EPSILON } from './consts';
+import { DEFAULT_PRECISION, EPSILON } from './const';
 
 export interface Point {
   x: number;
