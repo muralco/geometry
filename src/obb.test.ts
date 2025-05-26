@@ -1,7 +1,7 @@
 import { Aabb } from './aabb';
-import { Point } from './external-types';
 import { Matrix } from './matrix';
 import { Obb } from './obb';
+import { Point } from './point';
 
 describe('Obb', () => {
   // Sample Obb objects for testing

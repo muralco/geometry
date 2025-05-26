@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { Rect } from '@muralco/types';
-import { Bbox, Point } from './external-types';
+import { Bbox } from './external-types';
 import { Matrix } from './matrix';
+import { Point } from './point';
 
 interface AabbData {
   maxX: number;

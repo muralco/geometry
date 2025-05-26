@@ -1,5 +1,5 @@
-import { Point } from './external-types';
 import { Matrix } from './matrix';
+import { Point } from './point';
 
 function roundPoint({ x, y }: Point) {
   return {

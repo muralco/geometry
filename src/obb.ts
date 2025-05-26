@@ -1,6 +1,7 @@
 import { Aabb } from './aabb';
-import { Point, Size } from './external-types';
+import { Size } from './external-types';
 import { Matrix } from './matrix';
+import { Point } from './point';
 
 export class Obb {
   constructor(public readonly size: Size, public readonly space: Matrix) {}

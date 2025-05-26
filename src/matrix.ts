@@ -1,4 +1,4 @@
-import { Point } from './external-types';
+import { Point } from './point';
 
 const TRANSFORM_DETECTION_PRECISION = 4;
 
