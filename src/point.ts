@@ -1,4 +1,5 @@
 import { DEFAULT_PRECISION, EPSILON } from './const';
+import { Size } from './external-types';
 
 export interface Point {
   x: number;
@@ -111,6 +112,13 @@ export namespace Point {
     return {
       x: Math.round(x * m) * im,
       y: Math.round(y * m) * im,
+    };
+  }
+
+  export function fromSize({ height, width }: Size): Point {
+    return {
+      x: width,
+      y: height,
     };
   }
 
