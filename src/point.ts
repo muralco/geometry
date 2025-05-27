@@ -140,6 +140,10 @@ export namespace Point {
    * In place methods that can mutate the argument to avoid extra allocations
    */
   export namespace inPlace {
+    /**
+     * Adds points to the initial point in place.
+     * This function mutates the first argument.
+     */
     export function add(initial: Point, ...points: Point[]): void {
       points.forEach((point: Point) => {
         initial.x += point.x;
@@ -147,6 +151,10 @@ export namespace Point {
       });
     }
 
+    /**
+     * Multiplies points component-wise in place.
+     * This function mutates the first argument.
+     */
     export function mul(initial: Point, ...points: Point[]): void {
       points.forEach((point: Point) => {
         initial.x *= point.x;
@@ -154,25 +162,45 @@ export namespace Point {
       });
     }
 
+    /**
+     * Subtracts the second point from the first point in place.
+     * This function mutates the first argument.
+     */
     export function sub(a: Point, b: Point): void {
       a.x -= b.x;
       a.y -= b.y;
     }
 
+    /**
+     * Inverts the sign of each component of the point in place.
+     * This function mutates the argument.
+     */
     export function neg(point: Point): void {
       point.x = -point.x;
       point.y = -point.y;
     }
 
+    /**
+     * Scales the point by the given factors in place.
+     * This function mutates the argument.
+     */
     export function scale(point: Point, sx: number, sy = sx): void {
       point.x *= sx;
       point.y *= sy;
     }
 
+    /**
+     * Normalizes the point to a unit vector in place.
+     * This function mutates the argument.
+     */
     export function normalize(point: Point & NonZero): void {
       scale(point, 1 / length(point));
     }
 
+    /**
+     * Rounds the point to the specified precision in place.
+     * This function mutates the argument.
+     */
     export function round(point: Point, precision = DEFAULT_PRECISION): void {
       const m = 10 ** precision;
       const im = 1 / m;
