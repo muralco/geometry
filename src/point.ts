@@ -34,19 +34,32 @@ export namespace Point {
     return lengthSquared(point) > EPSILON * EPSILON;
   }
 
-  export function add(a: Point, b: Point): Point {
-    return { x: a.x + b.x, y: a.y + b.y };
+  export function add(initial: Point, ...points: Point[]): Point {
+    const result = { x: initial.x, y: initial.y };
+    points.forEach(({ x, y }: Point) => {
+      result.x += x;
+      result.y += y;
+    });
+
+    return result;
+  }
+
+  /**
+   * Multiplies points component-wise.
+   */
+  export function mul(initial: Point, ...points: Point[]): Point {
+    const result = { x: initial.x, y: initial.y };
+
+    points.forEach(({ x, y }: Point) => {
+      result.x *= x;
+      result.y *= y;
+    });
+
+    return result;
   }
 
   export function sub(a: Point, b: Point): Point {
     return { x: a.x - b.x, y: a.y - b.y };
-  }
-
-  /**
-   * Multiplies two points component-wise.
-   */
-  export function mul(a: Point, b: Point): Point {
-    return { x: a.x * b.x, y: a.y * b.y };
   }
 
   /**
@@ -127,19 +140,23 @@ export namespace Point {
    * In place methods that can mutate the argument to avoid extra allocations
    */
   export namespace inPlace {
-    export function add(a: Point, b: Point): void {
-      a.x += b.x;
-      a.y += b.y;
+    export function add(initial: Point, ...points: Point[]): void {
+      points.forEach((point: Point) => {
+        initial.x += point.x;
+        initial.y += point.y;
+      });
+    }
+
+    export function mul(initial: Point, ...points: Point[]): void {
+      points.forEach((point: Point) => {
+        initial.x *= point.x;
+        initial.y *= point.y;
+      });
     }
 
     export function sub(a: Point, b: Point): void {
       a.x -= b.x;
       a.y -= b.y;
-    }
-
-    export function mul(a: Point, b: Point): void {
-      a.x *= b.x;
-      a.y *= b.y;
     }
 
     export function neg(point: Point): void {
