@@ -110,6 +110,37 @@ describe('Point', () => {
       expect(Point.lerp(a, b, 2)).toEqual({ x: 20, y: 40 });
       expect(Point.lerp(a, b, -0.5)).toEqual({ x: -5, y: -10 });
     });
+
+    it('should correctly identify non-zero points', () => {
+      // Clearly non-zero points
+      expect(Point.isNonZero({ x: 1, y: 0 })).toBe(true);
+      expect(Point.isNonZero({ x: 0, y: 2 })).toBe(true);
+      expect(Point.isNonZero({ x: 3, y: 4 })).toBe(true);
+
+      // Zero point
+      expect(Point.isNonZero({ x: 0, y: 0 })).toBe(false);
+
+      // Very small values (should be treated as zero due to EPSILON)
+      expect(Point.isNonZero({ x: 1e-10, y: 0 })).toBe(false);
+      expect(Point.isNonZero({ x: 0, y: -1e-10 })).toBe(false);
+      expect(Point.isNonZero({ x: -1e-10, y: 1e-10 })).toBe(false);
+    });
+
+    it('should work as a type guard', () => {
+      const p = { x: 3, y: 4 };
+      if (Point.isNonZero(p)) {
+        // This should be safe to call with a non-zero point
+        const normalized = Point.normalize(p);
+        expect(Point.length(normalized)).toBeCloseTo(1);
+      } else {
+        fail('Point should be recognized as non-zero');
+      }
+
+      const zeroPoint = { x: 0, y: 0 };
+      if (Point.isNonZero(zeroPoint)) {
+        fail('Zero point should not be recognized as non-zero');
+      }
+    });
   });
 
   describe('in-place operations', () => {
