@@ -122,57 +122,56 @@ export namespace Point {
     };
   }
 
-  // In place methods that can mutate the argument to avoid extra allocations
-  // ------------------------------------------------------------------------
-
-  export function addInPlace(a: Point, b: Point): void {
-    a.x += b.x;
-    a.y += b.y;
-  }
-
-  export function subInPlace(a: Point, b: Point): void {
-    a.x -= b.x;
-    a.y -= b.y;
-  }
-
-  export function mulInPlace(a: Point, b: Point): void {
-    a.x *= b.x;
-    a.y *= b.y;
-  }
-
-  export function divInPlace(a: Point, b: Point): void {
-    a.x /= b.x;
-    a.y /= b.y;
-  }
-
-  export function negInPlace(point: Point): void {
-    point.x = -point.x;
-    point.y = -point.y;
-  }
-
-  export function scaleInPlace(point: Point, sx: number, sy = sx): void {
-    point.x *= sx;
-    point.y *= sy;
-  }
-
-  export function normalizeInPlace(point: Point): void {
-    const l = length(point);
-
-    if (l > EPSILON) {
-      scaleInPlace(point, 1 / l);
-    } else {
-      point.x = 0;
-      point.y = 0;
+  /**
+   * In place methods that can mutate the argument to avoid extra allocations
+   */
+  export namespace inPlace {
+    export function add(a: Point, b: Point): void {
+      a.x += b.x;
+      a.y += b.y;
     }
-  }
 
-  export function roundInPlace(
-    point: Point,
-    precision = DEFAULT_PRECISION,
-  ): void {
-    const m = 10 ** precision;
-    const im = 1 / m;
-    point.x = Math.round(point.x * m) * im;
-    point.y = Math.round(point.y * m) * im;
+    export function sub(a: Point, b: Point): void {
+      a.x -= b.x;
+      a.y -= b.y;
+    }
+
+    export function mul(a: Point, b: Point): void {
+      a.x *= b.x;
+      a.y *= b.y;
+    }
+
+    export function div(a: Point, b: Point): void {
+      a.x /= b.x;
+      a.y /= b.y;
+    }
+
+    export function neg(point: Point): void {
+      point.x = -point.x;
+      point.y = -point.y;
+    }
+
+    export function scale(point: Point, sx: number, sy = sx): void {
+      point.x *= sx;
+      point.y *= sy;
+    }
+
+    export function normalize(point: Point): void {
+      const l = length(point);
+
+      if (l > EPSILON) {
+        scale(point, 1 / l);
+      } else {
+        point.x = 0;
+        point.y = 0;
+      }
+    }
+
+    export function round(point: Point, precision = DEFAULT_PRECISION): void {
+      const m = 10 ** precision;
+      const im = 1 / m;
+      point.x = Math.round(point.x * m) * im;
+      point.y = Math.round(point.y * m) * im;
+    }
   }
 }

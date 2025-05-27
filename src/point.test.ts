@@ -124,68 +124,68 @@ describe('Point', () => {
     it('should add points in place', () => {
       const a = { x: 1, y: 2 };
       const b = { x: 3, y: 4 };
-      Point.addInPlace(a, b);
+      Point.inPlace.add(a, b);
       expect(a).toEqual({ x: 4, y: 6 });
     });
 
     it('should subtract points in place', () => {
       const a = { x: 5, y: 8 };
       const b = { x: 2, y: 3 };
-      Point.subInPlace(a, b);
+      Point.inPlace.sub(a, b);
       expect(a).toEqual({ x: 3, y: 5 });
     });
 
     it('should multiply points in place', () => {
       const a = { x: 2, y: 3 };
       const b = { x: 4, y: 5 };
-      Point.mulInPlace(a, b);
+      Point.inPlace.mul(a, b);
       expect(a).toEqual({ x: 8, y: 15 });
     });
 
     it('should divide points in place', () => {
       const a = { x: 10, y: 15 };
       const b = { x: 2, y: 3 };
-      Point.divInPlace(a, b);
+      Point.inPlace.div(a, b);
       expect(a).toEqual({ x: 5, y: 5 });
     });
 
     it('should negate points in place', () => {
       const p = { x: 3, y: -4 };
-      Point.negInPlace(p);
+      Point.inPlace.neg(p);
       expect(p).toEqual({ x: -3, y: 4 });
     });
 
     it('should scale points in place', () => {
       const p = { x: 2, y: 3 };
-      Point.scaleInPlace(p, 2);
+      Point.inPlace.scale(p, 2);
       expect(p).toEqual({ x: 4, y: 6 });
 
       const p2 = { x: 2, y: 3 };
-      Point.scaleInPlace(p2, 2, 3);
+      Point.inPlace.scale(p2, 2, 3);
       expect(p2).toEqual({ x: 4, y: 9 });
     });
 
     it('should normalize points in place', () => {
       const p = { x: 3, y: 0 };
-      Point.normalizeInPlace(p);
+      Point.inPlace.normalize(p);
       expect(p).toEqual({ x: 1, y: 0 });
 
       const zeroPoint = { x: 0, y: 0 };
-      Point.normalizeInPlace(zeroPoint);
+      Point.inPlace.normalize(zeroPoint);
       expect(zeroPoint).toEqual({ x: 0, y: 0 });
 
       const p2 = { x: 1, y: 1 };
-      Point.normalizeInPlace(p2);
+      Point.inPlace.normalize(p2);
       expect(Math.abs(Point.length(p2) - 1)).toBeLessThan(EPSILON);
     });
 
     it('should round points in place', () => {
       const p = { x: 4.34, y: 3.56 };
-      Point.roundInPlace(p, 1);
+      Point.inPlace.round(p, 1);
       expect(p).toEqual({ x: 4.3, y: 3.6 });
 
       const p2 = { x: 2.34, y: 3.56 };
-      Point.roundInPlace(p2, 0);
+      Point.inPlace.round(p2, 0);
       expect(p2).toEqual({ x: 2, y: 4 });
     });
   });
