@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Rect } from '@muralco/types';
 import { DEFAULT_PRECISION } from './const';
 import { Bbox } from './external-types';
