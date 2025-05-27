@@ -52,7 +52,7 @@ describe('Matrix', () => {
   });
 
   describe('transformInPlace', () => {
-    it('should transform a point in place with identity matrix', () => {
+    it('should not change the point with identity matrix', () => {
       const matrix = Matrix.identity();
       const point = { x: 100, y: 20 };
       matrix.transformInPlace(point);
