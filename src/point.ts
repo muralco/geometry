@@ -31,7 +31,7 @@ export namespace Point {
    * It's using EPSILON to avoid floating point precision issues.
    */
   export function isNonZero<P extends Point>(point: P): point is P & NonZero {
-    return Math.abs(point.x) > EPSILON || Math.abs(point.y) > EPSILON;
+    return lengthSquared(point) > EPSILON * EPSILON;
   }
 
   export function add(a: Point, b: Point): Point {
