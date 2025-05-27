@@ -33,19 +33,8 @@ describe('Point', () => {
     it('should divide points correctly', () => {
       const a = { x: 10, y: 15 };
       const b = { x: 2, y: 3 };
+      if (!Point.isNonZero(b)) fail('Division by zero should not happen here');
       expect(Point.div(a, b)).toEqual({ x: 5, y: 5 });
-    });
-
-    it('should return NaN if dividing two zero vectors', () => {
-      const a = { x: 0, y: 0 };
-      const b = { x: 0, y: 0 };
-      expect(Point.div(a, b)).toEqual({ x: NaN, y: NaN });
-    });
-
-    it('should return Infinity/-Infinity if dividing by zero', () => {
-      const a = { x: 5, y: -10 };
-      const b = { x: 0, y: 0 };
-      expect(Point.div(a, b)).toEqual({ x: Infinity, y: -Infinity });
     });
 
     it('should negate points correctly', () => {
@@ -60,17 +49,14 @@ describe('Point', () => {
 
     it('should normalize points correctly', () => {
       const p = { x: 3, y: 0 };
+      if (!Point.isNonZero(p)) fail('Division by zero should not happen here');
       expect(Point.normalize(p)).toEqual({ x: 1, y: 0 });
 
       const p2 = { x: 1, y: 1 };
+      if (!Point.isNonZero(p2)) fail('Division by zero should not happen here');
       const normalized = Point.normalize(p2);
       // Using approximately because of floating point precision
       expect(Point.length(normalized)).toBeCloseTo(1);
-    });
-
-    it('should return point with NaN for zero length', () => {
-      const zeroPoint = { x: 0, y: 0 };
-      expect(Point.normalize(zeroPoint)).toEqual({ x: NaN, y: NaN });
     });
 
     it('should calculate dot product correctly', () => {
@@ -158,15 +144,9 @@ describe('Point', () => {
     it('should divide points in place', () => {
       const a = { x: 10, y: 15 };
       const b = { x: 2, y: 3 };
+      if (!Point.isNonZero(b)) fail('Division by zero should not happen here');
       Point.inPlace.div(a, b);
       expect(a).toEqual({ x: 5, y: 5 });
-    });
-
-    it('should handle division by zero in place', () => {
-      const a = { x: 0, y: -10 };
-      const b = { x: 0, y: 0 };
-      Point.inPlace.div(a, b);
-      expect(a).toEqual({ x: NaN, y: -Infinity });
     });
 
     it('should negate points in place', () => {
@@ -187,18 +167,14 @@ describe('Point', () => {
 
     it('should normalize points in place', () => {
       const p = { x: 3, y: 0 };
+      if (!Point.isNonZero(p)) fail('Division by zero should not happen here');
       Point.inPlace.normalize(p);
       expect(p).toEqual({ x: 1, y: 0 });
 
       const p2 = { x: 1, y: 1 };
+      if (!Point.isNonZero(p2)) fail('Division by zero should not happen here');
       Point.inPlace.normalize(p2);
       expect(Point.length(p2)).toBeCloseTo(1);
-    });
-
-    it('should handle zero length normalization in place', () => {
-      const zeroPoint = { x: 0, y: 0 };
-      Point.inPlace.normalize(zeroPoint);
-      expect(zeroPoint).toEqual({ x: NaN, y: NaN });
     });
 
     it('should round points in place', () => {

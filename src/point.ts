@@ -1,5 +1,8 @@
-import { DEFAULT_PRECISION } from './const';
+import { DEFAULT_PRECISION, EPSILON } from './const';
 import { Size } from './external-types';
+
+declare const nonZero: unique symbol;
+type NonZero = { [nonZero]: true };
 
 export interface Point {
   x: number;
@@ -25,6 +28,14 @@ export namespace Point {
     return dx * dx + dy * dy;
   }
 
+  /**
+   * Checks if the point is non-zero.
+   * It's using EPSILON to avoid floating point precision issues.
+   */
+  export function isNonZero<P extends Point>(point: P): point is P & NonZero {
+    return Math.abs(point.x) > EPSILON || Math.abs(point.y) > EPSILON;
+  }
+
   export function add(a: Point, b: Point): Point {
     return { x: a.x + b.x, y: a.y + b.y };
   }
@@ -43,7 +54,7 @@ export namespace Point {
   /**
    * Divides two points component-wise.
    */
-  export function div(a: Point, b: Point): Point {
+  export function div(a: Point, b: Point & NonZero): Point {
     return { x: a.x / b.x, y: a.y / b.y };
   }
 
@@ -62,7 +73,7 @@ export namespace Point {
    * Normalizes the point to a unit vector.
    * This transformation keeps the direction of the point, but sets its length to 1.
    */
-  export function normalize(point: Point): Point {
+  export function normalize(point: Point & NonZero): Point {
     return scale(point, 1 / length(point));
   }
 
@@ -139,7 +150,7 @@ export namespace Point {
       a.y *= b.y;
     }
 
-    export function div(a: Point, b: Point): void {
+    export function div(a: Point, b: Point & NonZero): void {
       a.x /= b.x;
       a.y /= b.y;
     }
@@ -154,7 +165,7 @@ export namespace Point {
       point.y *= sy;
     }
 
-    export function normalize(point: Point): void {
+    export function normalize(point: Point & NonZero): void {
       scale(point, 1 / length(point));
     }
 
