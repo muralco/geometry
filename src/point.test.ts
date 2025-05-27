@@ -18,6 +18,13 @@ describe('Point', () => {
       expect(Point.add(a, b)).toEqual({ x: 4, y: 6 });
     });
 
+    it('should add three points correctly', () => {
+      const a = { x: 1, y: 2 };
+      const b = { x: 3, y: 4 };
+      const c = { x: 5, y: 6 };
+      expect(Point.add(a, b, c)).toEqual({ x: 9, y: 12 });
+    });
+
     it('should subtract points correctly', () => {
       const a = { x: 5, y: 8 };
       const b = { x: 2, y: 3 };
@@ -28,6 +35,13 @@ describe('Point', () => {
       const a = { x: 2, y: 3 };
       const b = { x: 4, y: 5 };
       expect(Point.mul(a, b)).toEqual({ x: 8, y: 15 });
+    });
+
+    it('should multiply three points correctly', () => {
+      const a = { x: 2, y: 3 };
+      const b = { x: 4, y: 5 };
+      const c = { x: 3, y: 2 };
+      expect(Point.mul(a, b, c)).toEqual({ x: 24, y: 30 });
     });
 
     it('should negate points correctly', () => {
