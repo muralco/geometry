@@ -30,13 +30,6 @@ describe('Point', () => {
       expect(Point.mul(a, b)).toEqual({ x: 8, y: 15 });
     });
 
-    it('should divide points correctly', () => {
-      const a = { x: 10, y: 15 };
-      const b = { x: 2, y: 3 };
-      if (!Point.isNonZero(b)) fail('Division by zero should not happen here');
-      expect(Point.div(a, b)).toEqual({ x: 5, y: 5 });
-    });
-
     it('should negate points correctly', () => {
       expect(Point.neg({ x: 3, y: -4 })).toEqual({ x: -3, y: 4 });
     });
@@ -139,14 +132,6 @@ describe('Point', () => {
       const b = { x: 4, y: 5 };
       Point.inPlace.mul(a, b);
       expect(a).toEqual({ x: 8, y: 15 });
-    });
-
-    it('should divide points in place', () => {
-      const a = { x: 10, y: 15 };
-      const b = { x: 2, y: 3 };
-      if (!Point.isNonZero(b)) fail('Division by zero should not happen here');
-      Point.inPlace.div(a, b);
-      expect(a).toEqual({ x: 5, y: 5 });
     });
 
     it('should negate points in place', () => {

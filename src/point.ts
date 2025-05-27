@@ -1,8 +1,6 @@
 import { DEFAULT_PRECISION, EPSILON } from './const';
 import { Size } from './external-types';
-
-declare const nonZero: unique symbol;
-type NonZero = { [nonZero]: true };
+import { NonZero } from './non-zero';
 
 export interface Point {
   x: number;
@@ -52,13 +50,6 @@ export namespace Point {
   }
 
   /**
-   * Divides two points component-wise.
-   */
-  export function div(a: Point, b: Point & NonZero): Point {
-    return { x: a.x / b.x, y: a.y / b.y };
-  }
-
-  /**
    * Invert sign of each component of the point.
    */
   export function neg(point: Point): Point {
@@ -72,6 +63,7 @@ export namespace Point {
   /**
    * Normalizes the point to a unit vector.
    * This transformation keeps the direction of the point, but sets its length to 1.
+   * Use `isNonZero` to ensure that the point is not zero before calling this function.
    */
   export function normalize(point: Point & NonZero): Point {
     return scale(point, 1 / length(point));
@@ -148,11 +140,6 @@ export namespace Point {
     export function mul(a: Point, b: Point): void {
       a.x *= b.x;
       a.y *= b.y;
-    }
-
-    export function div(a: Point, b: Point & NonZero): void {
-      a.x /= b.x;
-      a.y /= b.y;
     }
 
     export function neg(point: Point): void {
