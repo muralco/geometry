@@ -1,4 +1,4 @@
-import { DEFAULT_PRECISION, EPSILON } from './const';
+import { DEFAULT_PRECISION } from './const';
 import { Size } from './external-types';
 
 export interface Point {
@@ -63,9 +63,7 @@ export namespace Point {
    * This transformation keeps the direction of the point, but sets its length to 1.
    */
   export function normalize(point: Point): Point {
-    const l = length(point);
-
-    return l > EPSILON ? scale(point, 1 / l) : zero();
+    return scale(point, 1 / length(point));
   }
 
   /**
@@ -157,14 +155,7 @@ export namespace Point {
     }
 
     export function normalize(point: Point): void {
-      const l = length(point);
-
-      if (l > EPSILON) {
-        scale(point, 1 / l);
-      } else {
-        point.x = 0;
-        point.y = 0;
-      }
+      scale(point, 1 / length(point));
     }
 
     export function round(point: Point, precision = DEFAULT_PRECISION): void {

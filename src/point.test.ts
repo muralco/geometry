@@ -1,4 +1,3 @@
-import { EPSILON } from './const';
 import { Point } from './point';
 
 describe('Point', () => {
@@ -37,6 +36,18 @@ describe('Point', () => {
       expect(Point.div(a, b)).toEqual({ x: 5, y: 5 });
     });
 
+    it('should return NaN if dividing two zero vectors', () => {
+      const a = { x: 0, y: 0 };
+      const b = { x: 0, y: 0 };
+      expect(Point.div(a, b)).toEqual({ x: NaN, y: NaN });
+    });
+
+    it('should return Infinity/-Infinity if dividing by zero', () => {
+      const a = { x: 5, y: -10 };
+      const b = { x: 0, y: 0 };
+      expect(Point.div(a, b)).toEqual({ x: Infinity, y: -Infinity });
+    });
+
     it('should negate points correctly', () => {
       expect(Point.neg({ x: 3, y: -4 })).toEqual({ x: -3, y: 4 });
     });
@@ -51,13 +62,15 @@ describe('Point', () => {
       const p = { x: 3, y: 0 };
       expect(Point.normalize(p)).toEqual({ x: 1, y: 0 });
 
-      const zeroPoint = { x: 0, y: 0 };
-      expect(Point.normalize(zeroPoint)).toEqual({ x: 0, y: 0 });
-
       const p2 = { x: 1, y: 1 };
       const normalized = Point.normalize(p2);
       // Using approximately because of floating point precision
-      expect(Math.abs(Point.length(normalized) - 1)).toBeLessThan(EPSILON);
+      expect(Point.length(normalized)).toBeCloseTo(1);
+    });
+
+    it('should return point with NaN for zero length', () => {
+      const zeroPoint = { x: 0, y: 0 };
+      expect(Point.normalize(zeroPoint)).toEqual({ x: NaN, y: NaN });
     });
 
     it('should calculate dot product correctly', () => {
@@ -149,6 +162,13 @@ describe('Point', () => {
       expect(a).toEqual({ x: 5, y: 5 });
     });
 
+    it('should handle division by zero in place', () => {
+      const a = { x: 0, y: -10 };
+      const b = { x: 0, y: 0 };
+      Point.inPlace.div(a, b);
+      expect(a).toEqual({ x: NaN, y: -Infinity });
+    });
+
     it('should negate points in place', () => {
       const p = { x: 3, y: -4 };
       Point.inPlace.neg(p);
@@ -170,13 +190,15 @@ describe('Point', () => {
       Point.inPlace.normalize(p);
       expect(p).toEqual({ x: 1, y: 0 });
 
-      const zeroPoint = { x: 0, y: 0 };
-      Point.inPlace.normalize(zeroPoint);
-      expect(zeroPoint).toEqual({ x: 0, y: 0 });
-
       const p2 = { x: 1, y: 1 };
       Point.inPlace.normalize(p2);
-      expect(Math.abs(Point.length(p2) - 1)).toBeLessThan(EPSILON);
+      expect(Point.length(p2)).toBeCloseTo(1);
+    });
+
+    it('should handle zero length normalization in place', () => {
+      const zeroPoint = { x: 0, y: 0 };
+      Point.inPlace.normalize(zeroPoint);
+      expect(zeroPoint).toEqual({ x: NaN, y: NaN });
     });
 
     it('should round points in place', () => {
