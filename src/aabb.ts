@@ -15,20 +15,18 @@ interface AabbData {
  * Axis-aligned bounding box
  */
 export class Aabb {
-  constructor();
-  constructor(minX: number, minY: number, maxX: number, maxY: number);
-  constructor(
-    public minX = Infinity,
-    public minY = Infinity,
-    public maxX = -Infinity,
-    public maxY = -Infinity,
+  private constructor(
+    public minX: number,
+    public minY: number,
+    public maxX: number,
+    public maxY: number,
   ) {}
 
   /**
    * Returns an empty Aabb
    */
   static empty(): Aabb {
-    return new Aabb();
+    return new Aabb(Infinity, Infinity, -Infinity, -Infinity);
   }
 
   /**
@@ -59,7 +57,7 @@ export class Aabb {
    * Returns an Aabb that contains all the given points
    */
   static fromPoints(points: Point[]): Aabb {
-    const result = new Aabb();
+    const result = Aabb.empty();
     for (const point of points) {
       result.addPointInPlace(point);
     }
@@ -164,7 +162,7 @@ export class Aabb {
     return aabbs.reduce((acc: Aabb, item: Aabb) => {
       acc.unionInPlace(item);
       return acc;
-    }, new Aabb());
+    }, Aabb.empty());
   }
 
   union(other: Aabb): Aabb {
@@ -306,7 +304,7 @@ export class Aabb {
    * Returns the intersection of the provided Aabbs.
    */
   static intersection(...aabbs: Aabb[]): Aabb {
-    if (aabbs.length === 0) return new Aabb();
+    if (aabbs.length === 0) return Aabb.empty();
     const result = aabbs[0].clone();
     for (let i = 1; i < aabbs.length; i++) {
       result.intersectionInPlace(aabbs[i]);

@@ -149,13 +149,13 @@ describe('Obb', () => {
     it('should convert an identity Obb to Aabb', () => {
       const result = identityObb.toAabb();
 
-      expect(result).toEqual(new Aabb(0, 0, 100, 200));
+      expect(result).toEqual(Aabb.fromLtrb(0, 0, 100, 200));
     });
 
     it('should handle rotated Obb conversion to Aabb', () => {
       const result = rotatedObb.toAabb();
 
-      expect(result.round()).toEqual(new Aabb(-200, 0, 0.01, 100.01));
+      expect(result.round()).toEqual(Aabb.fromLtrb(-200, 0, 0.01, 100.01));
     });
   });
 
@@ -188,13 +188,13 @@ describe('Obb', () => {
 
     it('should shrink if negative padding is provided', () => {
       const expandedObb = identityObb.expand(-10);
-      expect(expandedObb.toAabb()).toEqual(new Aabb(10, 10, 90, 190));
+      expect(expandedObb.toAabb()).toEqual(Aabb.fromLtrb(10, 10, 90, 190));
     });
 
     it('should expand rotated Obb correctly', () => {
       const expandedObb = rotatedObb.expand(10);
       expect(expandedObb.toAabb().round()).toEqual(
-        new Aabb(-210, -10, 10.01, 110.01),
+        Aabb.fromLtrb(-210, -10, 10.01, 110.01),
       );
     });
 
