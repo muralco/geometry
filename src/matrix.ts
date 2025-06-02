@@ -7,6 +7,16 @@ const TRANSFORM_DETECTION_PRECISION = 4;
  *
  * It's a convenient way to represent a series of transformations
  * (translation, rotation, scaling) made in different orders.
+ *
+ * For example for rotation around origin this matrix can be used:
+ * ```
+ * const matrix = Matrix
+ *    .translation(Point.neg(origin)) // move origin to (0, 0)
+ *    .rotate(theta) // rotation around (0, 0)
+ *    .translate(origin); // move origin back to its original position
+ *
+ * const rotatedPoints = myPoints.map(p => matrix.transform(p));
+ * ```
  */
 export class Matrix {
   /**
@@ -19,11 +29,16 @@ export class Matrix {
    */
   private readonly data: Float32Array;
 
+  /**
+   * Use static methods to create a new matrix.
+   */
   private constructor(data: Float32Array) {
     this.data = data;
   }
 
-  // Apply the matrix to a point.
+  /**
+   * Apply the matrix to a point.
+   */
   transform({ x, y }: Point): Point {
     const m = this.data;
     return {
@@ -32,6 +47,10 @@ export class Matrix {
     };
   }
 
+  /**
+   * Combine two transformation matrices.
+   * It's similar to `then` method, but argument order is reversed.
+   */
   multiply(matrix: Matrix): Matrix {
     const m1 = this.data;
     const m2 = matrix.data;
@@ -78,6 +97,7 @@ export class Matrix {
 
   /**
    * Create scaling matrix and multiply it with the current matrix.
+   * If `sy` is not provided, it will be equal to `sx`.
    */
   scale(sx: number, sy: number = sx): Matrix {
     if (sx === 1 && sy === 1) return this;
@@ -199,6 +219,9 @@ export class Matrix {
     );
   }
 
+  /**
+   * Checks if two matrices are equal.
+   */
   equals(other: Matrix): boolean {
     const m0 = this.data;
     const m1 = other.data;
@@ -226,20 +249,34 @@ export class Matrix {
     return `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`;
   }
 
+  /**
+   * Creates an identity matrix. It does not perform any transformations.
+   * Can be used as a base for further transformations.
+   */
   static identity(): Matrix {
     return new Matrix(new Float32Array([1, 0, 0, 1, 0, 0]));
   }
 
+  /**
+   * Creates a translation matrix.
+   */
   static translation({ x, y }: Point): Matrix {
     return new Matrix(new Float32Array([1, 0, 0, 1, x, y]));
   }
 
+  /**
+   * Create a rotation around the (0, 0) matrix.
+   */
   static rotation(theta: number): Matrix {
     const cos = Math.cos(theta);
     const sin = Math.sin(theta);
     return new Matrix(new Float32Array([cos, sin, -sin, cos, 0, 0]));
   }
 
+  /**
+   * Creates a scaling matrix.
+   * If `sy` is not provided, it will be equal to `sx`.
+   */
   static scaling(sx: number, sy: number = sx): Matrix {
     return new Matrix(new Float32Array([sx, 0, 0, sy, 0, 0]));
   }

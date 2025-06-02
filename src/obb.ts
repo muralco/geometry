@@ -3,7 +3,16 @@ import { Size } from './external-types';
 import { Matrix } from './matrix';
 import { Point } from './point';
 
+/**
+ * Represents an oriented bounding box (OBB) in 2D space.
+ * It contains a size and a transformation matrix that defines its position and orientation.
+ */
 export class Obb {
+  /**
+   * Creates an oriented bounding box (OBB) with a given size and transformation matrix
+   * @param size The size of the OBB, defined by its width and height
+   * @param space Transformation from local to global space
+   */
   constructor(public readonly size: Size, public readonly space: Matrix) {}
 
   get width(): number {
@@ -14,6 +23,10 @@ export class Obb {
     return this.size.height;
   }
 
+  /**
+   * Returns the global center of the oriented bounding box
+   * @returns Point in global mural coordinates
+   */
   getGlobalCenter(): Point {
     return this.space.transform({
       x: this.size.width * 0.5,
@@ -64,6 +77,10 @@ export class Obb {
     );
   }
 
+  /**
+   * Shift the oriented bounding box by a delta vector.
+   * @return a new shifted oriented bounding box
+   */
   translate(delta: Point): Obb {
     return new Obb(this.size, this.space.translate(delta));
   }
@@ -136,14 +153,32 @@ export class Obb {
     );
   }
 
+  /**
+   * Detect if the current Obb has translation compared to another Obb.
+   *
+   * It can be useful to call it with Obb from the previous widget state
+   * to determine if the widget has been translated.
+   */
   hasTranslation(other: Obb): boolean {
     return this.space.hasTranslation(other.space);
   }
 
+  /**
+   * Detect if the current Obb has rotation compared to another Obb.
+   *
+   * It can be useful to call it with Obb from the previous widget state
+   * to determine if the widget has been rotated.
+   */
   hasRotation(other: Obb): boolean {
     return this.space.hasRotation(other.space);
   }
 
+  /**
+   * Detect if the current Obb has scaling compared to another Obb.
+   *
+   * It can be useful to call it with Obb from the previous widget state
+   * to determine if the widget has been scaled.
+   */
   hasScaling(other: Obb): boolean {
     return (
       this.size.width !== other.size.width ||
@@ -174,6 +209,9 @@ export class Obb {
     };
   }
 
+  /**
+   * Checks if two oriented bounding boxes are equal. It uses strict equality.
+   */
   equals(other: Obb): boolean {
     return (
       this.size.width === other.size.width &&

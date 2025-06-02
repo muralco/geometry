@@ -12,7 +12,8 @@ interface AabbData {
 }
 
 /**
- * Axis-aligned bounding box
+ * Axis-aligned bounding box.
+ * A rectangle defined by its minimum and maximum X and Y coordinates.
  */
 export class Aabb {
   private constructor(
@@ -64,6 +65,9 @@ export class Aabb {
     return result;
   }
 
+  /**
+   * Creates an Aabb from a single point.
+   */
   static fromPoint({ x, y }: Point): Aabb {
     return new Aabb(x, y, x, y);
   }
@@ -106,14 +110,14 @@ export class Aabb {
   }
 
   /**
-   * Creates an Aabb from a Bbox
+   * Creates an Aabb from the engine Bbox
    */
   static fromBbox({ x, x1, y, y1 }: Bbox): Aabb {
     return new Aabb(x, y, x1, y1);
   }
 
   /*
-   * Converts provided Aabb to a Bbox
+   * Converts provided Aabb to the engine Bbox
    */
   toBbox(): Bbox {
     const { maxX, maxY, minX, minY } = this;
@@ -126,7 +130,7 @@ export class Aabb {
   }
 
   /**
-   * Adds a point to the aabb and returns a new one.
+   * Expands the bounds to include the provided point.
    * Since this functions creates a new object, it's not recommended to use it in a loop.
    * Use `addPointInPlace` instead in such cases.
    */
@@ -140,13 +144,16 @@ export class Aabb {
   }
 
   /**
-   * Adds a point to the aabb in place.
+   * Expands the bounds to include the provided point.
    * This function mutates the provided object. Use it in a loop to avoid creating temporary objects.
    */
   addPointInPlace({ x, y }: Point): void {
     this.addXYInPlace(x, y);
   }
 
+  /**
+   * Expands the bounds to include the provided x and y coordinates.
+   */
   addXYInPlace(x: number, y: number): void {
     this.minX = Math.min(this.minX, x);
     this.minY = Math.min(this.minY, y);
@@ -312,12 +319,18 @@ export class Aabb {
     return result;
   }
 
+  /**
+   * Returns the intersection of this Aabb with another.
+   */
   intersection(other: Aabb): Aabb {
     const result = this.clone();
     result.intersectionInPlace(other);
     return result;
   }
 
+  /**
+   * Modifies this Aabb to be the intersection with another.
+   */
   intersectionInPlace(other: Aabb): void {
     this.minX = Math.max(this.minX, other.minX);
     this.minY = Math.max(this.minY, other.minY);
@@ -325,13 +338,22 @@ export class Aabb {
     this.maxY = Math.min(this.maxY, other.maxY);
   }
 
+  /**
+   * Returns the center point of the Aabb.
+   */
   get center(): Point {
     return {
-      x: (this.minX + this.maxX) / 2,
-      y: (this.minY + this.maxY) / 2,
+      x: (this.minX + this.maxX) * 0.5,
+      y: (this.minY + this.maxY) * 0.5,
     };
   }
 
+  /**
+   * Checks if two Aabbs are equal using strict equality.
+   *
+   * Two Aabbs are equal if they have the same min and max coordinates.
+   * Two invalid Aabbs (where minX > maxX or minY > maxY) are considered equal.
+   */
   equals(other: Aabb): boolean {
     return (
       (!this.isValid() && !other.isValid()) ||
