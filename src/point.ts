@@ -224,6 +224,10 @@ export namespace Point {
     };
   }
 
+  export function clone({ x, y }: Point) {
+    return { x, y };
+  }
+
   /**
    * In place methods that mutate the argument to avoid extra allocations.
    * Can be useful for processing large arrays of points or in performance-critical code.
