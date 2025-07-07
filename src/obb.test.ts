@@ -1,4 +1,5 @@
 import { Aabb } from './aabb';
+import { Angle } from './angle';
 import { Matrix } from './matrix';
 import { Obb } from './obb';
 import { Point } from './point';
@@ -14,14 +15,12 @@ describe('Obb', () => {
 
   const rotatedObb = new Obb(
     { height: 200, width: 100 },
-    Matrix.rotation(Math.PI / 2),
+    Matrix.rotation(Angle.fromRadians(Math.PI / 2)),
   );
 
   const complexObb = new Obb(
     { height: 200, width: 100 },
-    Matrix.identity()
-      .rotate(30 * (Math.PI / 180))
-      .translate({ x: 50, y: 50 }),
+    Matrix.identity().rotate(Angle.fromDegrees(30)).translate({ x: 50, y: 50 }),
   );
 
   const complexObbParent = new Obb(

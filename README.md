@@ -74,3 +74,23 @@ const obb = new Obb(
 // Map points between spaces
 const globalPoint = obb.mapToGlobal(localPoint);
 ```
+
+### Angle
+
+Angle is a tagged number type representing angles in radians.
+It provides utility functions for angle arithmetic and conversions.
+
+```typescript
+import { Angle } from '@muralco/geometry';
+
+// Create an angle
+const angle = Angle.fromDegrees(90);
+
+// Convert to radians
+const radians = Angle.toRadians(angle);
+const degrees = Angle.toDegrees(angle);
+
+// Normalize to [0, 2π)
+const normalizedAngle = Angle.normalize(angle);
+```
+

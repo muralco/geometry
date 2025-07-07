@@ -1,3 +1,4 @@
+import { Angle } from './angle';
 import { Point } from './point';
 
 const TRANSFORM_DETECTION_PRECISION = 4;
@@ -76,9 +77,9 @@ export class Matrix {
   /**
    * Create rotation matrix and multiply it with the current matrix.
    */
-  rotate(theta: number): Matrix {
-    if (theta === 0) return this;
-    return this.then(Matrix.rotation(theta));
+  rotate(angle: Angle): Matrix {
+    if (angle === 0) return this;
+    return this.then(Matrix.rotation(angle));
   }
 
   /**
@@ -267,9 +268,9 @@ export class Matrix {
   /**
    * Create a rotation around the (0, 0) matrix.
    */
-  static rotation(theta: number): Matrix {
-    const cos = Math.cos(theta);
-    const sin = Math.sin(theta);
+  static rotation(angle: Angle): Matrix {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
     return new Matrix(new Float32Array([cos, sin, -sin, cos, 0, 0]));
   }
 

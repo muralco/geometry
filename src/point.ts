@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+
+import { Angle } from './angle';
 import { DEFAULT_PRECISION, EPSILON } from './const';
 import { Size } from './external-types';
 import { NonZero } from './non-zero';
@@ -224,8 +227,15 @@ export namespace Point {
     };
   }
 
-  export function clone({ x, y }: Point) {
+  export function clone({ x, y }: Point): Point {
     return { x, y };
+  }
+
+  /**
+   * Calculates angle between the positive X axis and the vector represented by the point.
+   */
+  export function azimuth(vector: Point): Angle {
+    return Angle.normalize(Angle.fromRadians(Math.atan2(vector.y, vector.x)));
   }
 
   /**
