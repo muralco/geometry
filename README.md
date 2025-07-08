@@ -75,22 +75,31 @@ const obb = new Obb(
 const globalPoint = obb.mapToGlobal(localPoint);
 ```
 
-### Angle
+### Angles (Radians/Degrees)
 
-Angle is a tagged number type representing angles in radians.
-It provides utility functions for angle arithmetic and conversions.
+There are two angle representations in this package: `Radians` and `Degrees`.
+Both are tagged types to not confuse them with regular numbers, or use with incorrect units.
 
 ```typescript
-import { Angle } from '@muralco/geometry';
+import { Radians, Degrees } from '@muralco/geometry';
 
-// Create an angle
-const angle = Angle.fromDegrees(90);
+// Create a Radians value from a regular number
+const r: Radians = Radians(Math.PI / 2);
 
-// Convert to radians
-const radians = Angle.toRadians(angle);
-const degrees = Angle.toDegrees(angle);
+// Create a Degrees value from a regular number
+const d: Degrees = Degrees(90);
+
+// Convert between radians and degrees
+const radians1: Radians = Radians.fromDegrees(90);
+const degrees1: Degrees = Radians.toDegrees(radians1);
+
+const degrees2 = Degrees(45); // Just add the `Degrees` tag to a number
+const radians2 = Degrees.toRadians(degrees2);
 
 // Normalize to [0, 2π)
-const normalizedAngle = Angle.normalize(angle);
+const normalizedRadians = Radians.normalize(radians1);
+
+// Normalize to [0, 360)
+const normalizedDegrees = Degrees.normalize(degrees1);
 ```
 
