@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
-import { Angle } from './angle';
+import { Radians } from './angle';
 import { DEFAULT_PRECISION, EPSILON } from './const';
 import { Size } from './external-types';
 import { NonZero } from './non-zero';
@@ -234,8 +234,8 @@ export namespace Point {
   /**
    * Calculates angle between the positive X axis and the vector represented by the point.
    */
-  export function azimuth(vector: Point): Angle {
-    return Angle.normalize(Angle.fromRadians(Math.atan2(vector.y, vector.x)));
+  export function azimuth(vector: Point): Radians {
+    return Radians.normalize(Radians(Math.atan2(vector.y, vector.x)));
   }
 
   /**

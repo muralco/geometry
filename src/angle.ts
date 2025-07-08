@@ -1,40 +1,40 @@
-declare const tag: unique symbol;
-
 /**
  * Represents an angle in radians.
  *
  * This type is tagged to ensure that it is distinct from regular numbers,
  * and has a value in correct units (radians).
  */
-export type Angle = number & { [tag]: true };
+export type Radians = number & { [Radians.tag]: true };
 
-export namespace Angle {
-  export function fromDegrees(degrees: number): Angle {
-    return (degrees * (Math.PI / 180)) as Angle;
+export function Radians(value: number): Radians {
+  return value as Radians;
+}
+
+export namespace Radians {
+  export declare const tag: unique symbol;
+
+  export function fromDegrees(degrees: number): Radians {
+    return (degrees * (Math.PI / 180)) as Radians;
   }
 
-  export function fromRadians(radians: number): Angle {
-    return radians as Angle;
-  }
-
-  export function toRadians(angle: Angle): number {
+  export function toRadians(angle: Radians): number {
     return angle;
   }
 
-  export function toDegrees(radians: Angle): number {
+  export function toDegrees(radians: Radians): number {
     return radians * (180 / Math.PI);
   }
 
-  export function normalize(angle: Angle): Angle {
+  export function normalize(angle: Radians): Radians {
     const a = angle % (2 * Math.PI);
-    return (a >= 0 ? a : a + 2 * Math.PI) as Angle;
+    return (a >= 0 ? a : a + 2 * Math.PI) as Radians;
   }
 
-  export function add(a: Angle, b: Angle): Angle {
-    return normalize((a + b) as Angle);
+  export function add(a: Radians, b: Radians): Radians {
+    return normalize((a + b) as Radians);
   }
 
-  export function sub(a: Angle, b: Angle): Angle {
-    return normalize((a - b) as Angle);
+  export function sub(a: Radians, b: Radians): Radians {
+    return normalize((a - b) as Radians);
   }
 }

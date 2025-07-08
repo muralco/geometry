@@ -1,4 +1,4 @@
-import { Angle } from './angle';
+import { Radians } from './angle';
 import { Point } from './point';
 
 const TRANSFORM_DETECTION_PRECISION = 4;
@@ -77,7 +77,7 @@ export class Matrix {
   /**
    * Create rotation matrix and multiply it with the current matrix.
    */
-  rotate(angle: Angle): Matrix {
+  rotate(angle: Radians): Matrix {
     if (angle === 0) return this;
     return this.then(Matrix.rotation(angle));
   }
@@ -268,7 +268,7 @@ export class Matrix {
   /**
    * Create a rotation around the (0, 0) matrix.
    */
-  static rotation(angle: Angle): Matrix {
+  static rotation(angle: Radians): Matrix {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     return new Matrix(new Float32Array([cos, sin, -sin, cos, 0, 0]));
