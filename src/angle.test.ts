@@ -1,4 +1,4 @@
-import { Radians } from './angle';
+import { Radians, Degrees } from './angle';
 
 describe('Angle', () => {
   describe('Radians', () => {
@@ -37,6 +37,35 @@ describe('Angle', () => {
       const a = Radians.fromDegrees(20);
       const b = Radians.fromDegrees(30);
       expect(Radians.sub(a, b)).toBeCloseTo(Radians.fromDegrees(350));
+    });
+  });
+
+  describe('Degrees', () => {
+    it('fromRadians converts radians to degrees', () => {
+      const angle = Degrees.fromRadians(Math.PI);
+      expect(angle).toBeCloseTo(180);
+    });
+
+    it('toRadians converts degrees to radians', () => {
+      const rad = Degrees.toRadians(Degrees(180));
+      expect(rad).toBeCloseTo(Math.PI);
+    });
+
+    it('normalize ensures angles are in [0, 360)', () => {
+      const angle = Degrees.normalize(Degrees(370));
+      expect(angle).toBeCloseTo(Degrees(10));
+    });
+
+    it('add returns the normalized sum of two angles', () => {
+      const a = Degrees(350);
+      const b = Degrees(20);
+      expect(Degrees.add(a, b)).toBeCloseTo(Degrees(10));
+    });
+
+    it('sub returns the normalized difference of two angles', () => {
+      const a = Degrees(20);
+      const b = Degrees(30);
+      expect(Degrees.sub(a, b)).toBeCloseTo(Degrees(350));
     });
   });
 });
