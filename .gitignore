@@ -1,0 +1,47 @@
+# Common temp stuff
+*~
+*.*~
+~$*
+.DS_Store
+Thumbs.db
+
+# Bundle
+dist
+
+# NPM
+node_modules
+npm-debug.log
+
+# Cache stuff
+.eslintcache
+.happypack
+.stylelint-cache
+
+# Webpack Bundle Analyzer
+stats.json
+
+# Yarn
+yarn-error.log
+
+# Yalc
+.yalc
+yalc.lock
+
+# IDE
+.idea
+.vscode/save-restore-editors.json
+
+# Code coverage
+.nyc_output
+coverage
+
+.envrc
+.cache
+#Retries test log
+@rerun.log
+
+# Vim
+*.swp
+
+# SWC Plugins
+.swc
