@@ -1,6 +1,5 @@
-import { Rect } from '@muralco/types';
 import { DEFAULT_PRECISION } from './const';
-import { Bbox } from './external-types';
+import { Bbox, Rect } from './primitives';
 import { Matrix } from './matrix';
 import { Point } from './point';
 
