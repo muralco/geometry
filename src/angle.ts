@@ -86,6 +86,10 @@ export namespace Radians {
       y: Math.sin(radians),
     };
   }
+
+  export function zero(): Radians {
+    return 0 as Radians;
+  }
 }
 
 export namespace Degrees {
@@ -144,5 +148,9 @@ export namespace Degrees {
    */
   export function direction(degrees: Degrees): Point {
     return Radians.direction(Degrees.toRadians(degrees));
+  }
+
+  export function zero(): Degrees {
+    return 0 as Degrees;
   }
 }
