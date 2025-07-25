@@ -349,6 +349,20 @@ export class Aabb {
   }
 
   /**
+   * Returns the minimum x an y coordinates of the Aabb (left top corner).
+   */
+  get min(): Point {
+    return { x: this.minX, y: this.minY };
+  }
+
+  /**
+   * Returns the maximum x and y coordinates of the Aabb (right bottom corner).
+   */
+  get max(): Point {
+    return { x: this.maxX, y: this.maxY };
+  }
+
+  /**
    * Checks if two Aabbs are equal using strict equality.
    *
    * Two Aabbs are equal if they have the same min and max coordinates.
