@@ -83,6 +83,19 @@ export class Matrix {
   }
 
   /**
+   * Create a rotation matrix around a specific pivot point, and multiply it with
+   * current matrix
+   */
+  rotateAround(angle: Radians, pivot: Point): Matrix {
+    if (angle === 0) return this;
+    if (Point.equals(pivot, Point.zero())) return this.rotate(angle);
+
+    return this.then(Matrix.translation(Point.scale(pivot, -1)))
+      .then(Matrix.rotation(angle))
+      .then(Matrix.translation(pivot));
+  }
+
+  /**
    * Create translation matrix and multiply it with the current matrix.
    */
   translate(delta: Point): Matrix {
@@ -98,11 +111,36 @@ export class Matrix {
 
   /**
    * Create scaling matrix and multiply it with the current matrix.
-   * If `sy` is not provided, it will be equal to `sx`.
    */
-  scale(sx: number, sy: number = sx): Matrix {
-    if (sx === 1 && sy === 1) return this;
-    return this.then(Matrix.scaling(sx, sy));
+  scale(sx: number, sy?: number): Matrix;
+  scale(factor: number | Point): Matrix;
+  scale(factor: number | Point, _sy?: number): Matrix {
+    if (_sy !== undefined) {
+      factor = { x: factor as number, y: _sy };
+    } else if (typeof factor === 'number') {
+      factor = { x: factor, y: factor };
+    }
+
+    if (Point.equals(factor, { x: 1, y: 1 })) return this;
+
+    return this.then(Matrix.scaling(factor));
+  }
+
+  /**
+   * Create scaling matrix around a specific pivot point, and multiply
+   * it with the current matrix.
+   */
+  scaleAround(factor: Point | number, pivot: Point): Matrix {
+    if (typeof factor === 'number') {
+      factor = { x: factor, y: factor };
+    }
+
+    if (Point.equals(factor, { x: 1, y: 1 })) return this;
+    if (Point.equals(pivot, Point.zero())) return this.scale(factor);
+
+    return this.then(Matrix.translation(Point.scale(pivot, -1)))
+      .then(Matrix.scaling(factor))
+      .then(Matrix.translation(pivot));
   }
 
   private det() {
@@ -251,6 +289,16 @@ export class Matrix {
   }
 
   /**
+   * Returns a copy of the underlying matrix data, in column-major order.
+   *
+   * @see {data}
+   * @returns [a, b, c, d, e, f];
+   */
+  toRaw(): Float32Array {
+    return new Float32Array(this.data);
+  }
+
+  /**
    * Creates an identity matrix. It does not perform any transformations.
    * Can be used as a base for further transformations.
    */
@@ -276,9 +324,16 @@ export class Matrix {
 
   /**
    * Creates a scaling matrix.
-   * If `sy` is not provided, it will be equal to `sx`.
    */
-  static scaling(sx: number, sy: number = sx): Matrix {
-    return new Matrix(new Float32Array([sx, 0, 0, sy, 0, 0]));
+  static scaling(sx: number, sy?: number): Matrix;
+  static scaling(factor: Point | number): Matrix;
+  static scaling(factor: Point | number, _sy?: number): Matrix {
+    if (_sy !== undefined) {
+      factor = { x: factor as number, y: _sy };
+    } else if (typeof factor === 'number') {
+      factor = { x: factor, y: factor };
+    }
+
+    return new Matrix(new Float32Array([factor.x, 0, 0, factor.y, 0, 0]));
   }
 }

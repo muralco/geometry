@@ -260,4 +260,48 @@ describe('Matrix', () => {
       expect(matrix1.hasTranslation(matrix2)).toBe(true);
     });
   });
+
+  describe('rotateAround', () => {
+    it('rotate around a specific pivot', () => {
+      const points = [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+      ];
+
+      // rotate around the mid point
+      const matrix = Matrix.identity().rotateAround(Radians(Math.PI / 2), {
+        x: 50,
+        y: 0,
+      });
+
+      const output = points.map(p => Point.round(matrix.transform(p)));
+
+      expect(output).toEqual([
+        { x: 50, y: -50 },
+        { x: 50, y: 50 },
+      ]);
+    });
+  });
+
+  describe('scaleAround', () => {
+    it('scale around a specific pivot', () => {
+      const points = [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+      ];
+
+      // scale around the mid point
+      const matrix = Matrix.identity().scaleAround(2, {
+        x: 50,
+        y: 0,
+      });
+
+      const output = points.map(p => Point.round(matrix.transform(p)));
+
+      expect(output).toEqual([
+        { x: -50, y: 0 },
+        { x: 150, y: 0 },
+      ]);
+    });
+  });
 });
