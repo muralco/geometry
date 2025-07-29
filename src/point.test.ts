@@ -99,9 +99,17 @@ describe('Point', () => {
     });
 
     it('should round point values', () => {
-      expect(Point.round({ x: 2.34, y: 3.56 })).toEqual({ x: 2.34, y: 3.56 });
-      expect(Point.round({ x: 4.33, y: 3.56 }, 1)).toEqual({ x: 4.3, y: 3.6 });
-      expect(Point.round({ x: 2.34, y: 3.56 }, 0)).toEqual({ x: 2, y: 4 });
+      const x = 1.2345678;
+      const y = 2.3456789;
+
+      expect(Point.round({ x, y })).toEqual({ x: 1.23, y: 2.35 });
+      expect(Point.round({ x, y }, 1)).toEqual({ x: 1.2, y: 2.3 });
+      expect(Point.round({ x, y }, 2)).toEqual({ x: 1.23, y: 2.35 });
+      expect(Point.round({ x, y }, 3)).toEqual({ x: 1.235, y: 2.346 });
+      expect(Point.round({ x, y }, 4)).toEqual({ x: 1.2346, y: 2.3457 });
+      expect(Point.round({ x, y }, 5)).toEqual({ x: 1.23457, y: 2.34568 });
+      expect(Point.round({ x, y }, 6)).toEqual({ x: 1.234568, y: 2.345679 });
+      expect(Point.round({ x, y }, 7)).toEqual({ x: 1.2345678, y: 2.3456789 });
     });
 
     it('should interpolate between points correctly', () => {

@@ -191,10 +191,9 @@ export namespace Point {
    */
   export function round({ x, y }: Point, precision = DEFAULT_PRECISION): Point {
     const m = 10 ** precision;
-    const im = 1 / m;
     return {
-      x: Math.round(x * m) * im,
-      y: Math.round(y * m) * im,
+      x: Math.round(x * m) / m,
+      y: Math.round(y * m) / m,
     };
   }
 
