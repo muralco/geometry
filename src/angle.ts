@@ -1,3 +1,6 @@
+import { DEFAULT_PRECISION } from './const';
+import { Point } from './point';
+
 /**
  * Represents an angle in radians.
  *
@@ -72,6 +75,21 @@ export namespace Radians {
   export function sub(a: Radians, b: Radians): Radians {
     return normalize((a - b) as Radians);
   }
+
+  /**
+   * Returns a vector representing the direction of the angle in radians.
+   * This function is opposite to the `Point.azimuth` function.
+   */
+  export function direction(radians: Radians): Point {
+    return {
+      x: Math.cos(radians),
+      y: Math.sin(radians),
+    };
+  }
+
+  export function zero(): Radians {
+    return 0 as Radians;
+  }
 }
 
 export namespace Degrees {
@@ -111,5 +129,28 @@ export namespace Degrees {
    */
   export function sub(a: Degrees, b: Degrees): Degrees {
     return normalize((a - b) as Degrees);
+  }
+
+  /**
+   * Rounds the angle to a specified precision.
+   */
+  export function round(
+    angle: Degrees,
+    precision: number = DEFAULT_PRECISION,
+  ): Degrees {
+    const m = 10 ** precision;
+    return (Math.round(angle * m) / m) as Degrees;
+  }
+
+  /**
+   * Returns a vector representing the direction of the angle in radians.
+   * This function is opposite to the `Point.azimuth` function.
+   */
+  export function direction(degrees: Degrees): Point {
+    return Radians.direction(Degrees.toRadians(degrees));
+  }
+
+  export function zero(): Degrees {
+    return 0 as Degrees;
   }
 }
