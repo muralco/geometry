@@ -2,7 +2,7 @@
 
 import { Radians } from './angle';
 import { DEFAULT_PRECISION, EPSILON } from './const';
-import { Size } from './external-types';
+import { Size } from './primitives';
 import { NonZero } from './non-zero';
 
 /**

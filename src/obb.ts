@@ -1,5 +1,5 @@
 import { Aabb } from './aabb';
-import { Size } from './external-types';
+import { Size } from './primitives';
 import { Matrix } from './matrix';
 import { Point } from './point';
 

@@ -1,38 +1,31 @@
 {
   "name": "@muralco/geometry",
   "version": "1.1.0",
-  "description": "",
-  "private": true,
+  "description": "2D geometric library for spatial computation",
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tactivos/murally.git"
+    "url": "git+https://github.com/muralco/geometry.git"
   },
   "bugs": {
-    "url": "https://github.com/tactivos/murally/issues"
+    "url": "https://github.com/muralco/geometry/issues"
   },
-  "homepage": "https://github.com/tactivos/murally#readme",
-  "author": "",
+  "homepage": "https://github.com/muralco/geometry",
+  "author": "Mural",
   "license": "ISC",
-  "exports": {
-    ".": "./dist/index.js"
-  },
+  "files": ["dist/*"],
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "webpack --config=build/webpack.config.js --mode=production",
-    "test": "jest",
-    "docs": "api-extractor run --local --verbose",
-    "depcheck": "npx muralco-depcheck"
-  },
-  "dependencies": {
-    "@muralco/types": "*"
+    "build": "npm run clean && tsc",
+    "test": "jest"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.42.3",
-    "@muralco/config": "*",
     "@types/jest": "29.5.0",
     "jest": "29.5.0",
-    "rimraf": "5.0.7"
+    "rimraf": "5.0.7",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
   }
 }
